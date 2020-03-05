@@ -57,6 +57,7 @@ public class PersonService {
         //two returns:
         // user has no persons --> null
         if (personList.size() == 0) {
+            db.closeConnection(true);
             String message = "Error: user has no Person objects, null";
             return new PersonResponse(message, false);
         }
@@ -72,11 +73,12 @@ public class PersonService {
                 Person tempPerson = pDao.getPerson(personID);
                 usernameFromID = tempPerson.getUsername();
                 if (!userName.equals(usernameFromID)) {
+                    db.closeConnection(true);
                     String message = "Error: authToken and personID don't match, invalid privileges";
                     return new PersonResponse(message, false);
                 }
             } catch (Exception e) {
-                //getting null pointer exception
+                db.closeConnection(true);
                 String message = "Error: Failed to get all Person objects";
                 return new PersonResponse(message, false);
             }

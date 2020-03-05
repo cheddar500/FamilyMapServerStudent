@@ -45,6 +45,7 @@ public class FillService {
         //generations default 4, must be non-negative
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if(request.getNumOfGenerations() == null){
+            db.closeConnection(true);
             String message = "Error: invalid number of generations, must be non-negative";
             return new FillResponse(message, false);
         }
@@ -56,6 +57,7 @@ public class FillService {
         UserDao uDao = new UserDao(conn);
         User user = uDao.getUser(userName);
         if(user == null){
+            db.closeConnection(true);
             String message = "Error: invalid userName";
             return new FillResponse(message, false);
         }

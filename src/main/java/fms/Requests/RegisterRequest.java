@@ -45,7 +45,7 @@ public class RegisterRequest {
      * @param password Users password
      * @param userName Users username
      */
-    public RegisterRequest(String email, String firstName, String lastName, String gender, String password, String userName) {
+    public RegisterRequest( String userName, String password,String email, String firstName, String lastName, String gender) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;

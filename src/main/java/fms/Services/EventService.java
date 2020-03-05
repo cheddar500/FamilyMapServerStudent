@@ -77,6 +77,7 @@ public class EventService {
         //two returns:
         // user has no persons --> null
         if (eventList.size() == 0) {
+            db.closeConnection(true);
             String message = "Error: user has no Event objects, null";
             return new EventResponse(message, false);
         }
@@ -92,11 +93,12 @@ public class EventService {
                 Event tempPerson = eDao.getEvent(eventID);
                 usernameFromID = tempPerson.getUsername();
                 if (!userName.equals(usernameFromID)) {
+                    db.closeConnection(true);
                     String message = "Error: authToken and eventID don't match, invalid privileges";
                     return new EventResponse(message, false);
                 }
             } catch (Exception e) {
-                //getting null pointer exception
+                db.closeConnection(true);
                 String message = "Error: Failed to get all Event objects";
                 return new EventResponse(message, false);
             }

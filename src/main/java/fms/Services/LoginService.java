@@ -34,6 +34,7 @@ public class LoginService {
         User user = uDao.login(request.getUserName(), request.getPassword());
         //check validity of login
         if(user == null){
+            db.closeConnection(true);
             return new LoginResponse("User/Password combo doesn't exist", false);
         }
         //login seems valid, try to get authToken

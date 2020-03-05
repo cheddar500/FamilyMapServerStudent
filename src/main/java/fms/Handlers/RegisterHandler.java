@@ -38,6 +38,11 @@ public class RegisterHandler implements HttpHandler {
             String requestString = sb.toString();
             RegisterRequest request = JsonSerializer.deserialize(requestString, RegisterRequest.class);
             RegisterResponse response = new RegisterService().register(request);
+            if(!response.getSuccess()){
+                inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                RegisterResponse resp = new RegisterResponse("Error: user already exists", false);
+                inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
+            }
             //send that it was ok
             inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             //give me where I need to write what happened -> write the response we got

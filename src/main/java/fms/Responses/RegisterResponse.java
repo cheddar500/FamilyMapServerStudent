@@ -37,14 +37,12 @@ public class RegisterResponse implements IResponse{
     /**
      * constructor for RegisterResponse
      * @param authToken AuthToken for the user
-     * @param message Tells success/error messages
      * @param personID identifier for the user
      * @param success Tells if completed successfully or not
      * @param userName username for the user
      */
-    public RegisterResponse(String authToken, String message, String personID, Boolean success, String userName) {
+    public RegisterResponse(String authToken, String userName, String personID, Boolean success) {
         this.authToken = authToken;
-        this.message = message;
         this.personID = personID;
         this.success = success;
         this.userName = userName;

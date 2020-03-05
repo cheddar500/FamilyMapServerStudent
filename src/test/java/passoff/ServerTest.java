@@ -574,33 +574,33 @@ public class ServerTest {
         }
     }
 
-    @Test
-    @DisplayName("Persistence Test")
-    public void testPersistence(TestInfo paramTestInfo) throws Client.ServerConnectionException {
-        printTestName(paramTestInfo);
-        load();
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Shut down the server, wait a few seconds, then restart the server. Then press ENTER.");
-        scanner.nextLine();
-        try {
-            JsonReader jsonReader = new JsonReader(new FileReader("passoffFiles/LoadData.json"));
-            LoadRequest loadRequest = (LoadRequest)GSON.fromJson(jsonReader, LoadRequest.class);
-            LoginResult loginResult = this.proxy.b(host, port, loginRequest);
-            EventsResult eventsResult = this.proxy.b(host, port, loginResult.c());
-            PersonsResult personsResult = this.proxy.d(host, port, loginResult.c());
-            Assertions.assertEquals(loadRequest.b(loginRequest.b()), eventsResult.c(), SHEILA.g() + "'s events do not match those loaded");
-            Assertions.assertEquals(loadRequest.e(loginRequest.b()), personsResult.c(), SHEILA.g() + "'s persons do not match those loaded");
-            loginResult = this.proxy.b(host, port, loginRequest2);
-            eventsResult = this.proxy.b(host, port, loginResult.c());
-            personsResult = this.proxy.d(host, port, loginResult.c());
-            Assertions.assertEquals(loadRequest.b(loginRequest2.b()), eventsResult.c(), PATRICK.g() + "'s events do not match those loaded");
-            Assertions.assertEquals(loadRequest.e(loginRequest2.b()), personsResult.c(), PATRICK.g() + "'s persons do not match those loaded");
-        } catch (client.Client.ServerConnectionException serverConnectionException) {
-            Assertions.fail(serverConnectionException.getMessage());
-        } catch (FileNotFoundException fileNotFoundException) {
-            Assertions.fail("passoffFiles/LoadData.json not found in project root directory");
-        }
-    }
+//    @Test
+//    @DisplayName("Persistence Test")
+//    public void testPersistence(TestInfo paramTestInfo) throws Client.ServerConnectionException {
+//        printTestName(paramTestInfo);
+//        load();
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Shut down the server, wait a few seconds, then restart the server. Then press ENTER.");
+//        scanner.nextLine();
+//        try {
+//            JsonReader jsonReader = new JsonReader(new FileReader("passoffFiles/LoadData.json"));
+//            LoadRequest loadRequest = (LoadRequest)GSON.fromJson(jsonReader, LoadRequest.class);
+//            LoginResult loginResult = this.proxy.b(host, port, loginRequest);
+//            EventsResult eventsResult = this.proxy.b(host, port, loginResult.c());
+//            PersonsResult personsResult = this.proxy.d(host, port, loginResult.c());
+//            Assertions.assertEquals(loadRequest.b(loginRequest.b()), eventsResult.c(), SHEILA.g() + "'s events do not match those loaded");
+//            Assertions.assertEquals(loadRequest.e(loginRequest.b()), personsResult.c(), SHEILA.g() + "'s persons do not match those loaded");
+//            loginResult = this.proxy.b(host, port, loginRequest2);
+//            eventsResult = this.proxy.b(host, port, loginResult.c());
+//            personsResult = this.proxy.d(host, port, loginResult.c());
+//            Assertions.assertEquals(loadRequest.b(loginRequest2.b()), eventsResult.c(), PATRICK.g() + "'s events do not match those loaded");
+//            Assertions.assertEquals(loadRequest.e(loginRequest2.b()), personsResult.c(), PATRICK.g() + "'s persons do not match those loaded");
+//        } catch (client.Client.ServerConnectionException serverConnectionException) {
+//            Assertions.fail(serverConnectionException.getMessage());
+//        } catch (FileNotFoundException fileNotFoundException) {
+//            Assertions.fail("passoffFiles/LoadData.json not found in project root directory");
+//        }
+//    }
 
     @Test
     @DisplayName("Clear Test")
