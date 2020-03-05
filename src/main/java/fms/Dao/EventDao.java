@@ -164,7 +164,7 @@ public class EventDao {
             while(rs.next()) {
                 if(events == null) events = new ArrayList<>();
                 events.add(new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
-                        rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
+                        rs.getString("personID"), rs.getDouble("latitude"), rs.getDouble("longitude"),
                         rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
                         rs.getInt("year")));
             }

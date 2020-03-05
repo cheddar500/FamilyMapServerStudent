@@ -55,7 +55,7 @@ public class RegisterService {
 //        * @param firstName First Name: User’s first name (non-empty string)
 //        * @param lastName Last Name: User’s last name (non-empty string)
 //        * @param gender Gender: User’s gender (string: f or m)
-//        * @param personID Person ID: Unique Person ID assigned to this user’s generated Person object -
+//        * @param personID Person ID: Unique Person ID assigned to this user’s generated Person object
         String userName = request.getUserName();
         //if user already exists, can't register them
         User testIfExits = uDao.getUser(userName);

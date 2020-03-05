@@ -88,8 +88,14 @@ public class FillService {
         /////////////////////////////////////////////
         //Close connection, return response
         /////////////////////////////////////////////
+        int numberOfPersons = 1;
+        int numOfEvents = 1;
+        for (int i = request.getNumOfGenerations(); i > 0; i++) {
+            numberOfPersons += Math.pow(2,i);
+        }
+        numOfEvents += (numberOfPersons-1)*3;
         db.closeConnection(true);
-        String message = "Successfully filled in data for the user";
+        String message = "Successfully added "+numberOfPersons+" persons and "+numOfEvents+" events to the database.";
         return new FillResponse(message, true);
     }
 
