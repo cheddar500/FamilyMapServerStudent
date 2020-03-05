@@ -116,7 +116,7 @@
          "spouseID":"Happy_Birthday"
       }
    ],
-"events":[
+   "events":[
       {
          "eventType":"birth",
          "personID":"Sheila_Parker",
@@ -126,7 +126,7 @@
          "longitude":144.9667,
          "year":1970,
          "eventID":"Sheila_Birth",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"marriage",
@@ -137,7 +137,7 @@
          "longitude":-117.7500,
          "year":2012,
          "eventID":"Sheila_Marriage",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"completed asteroids",
@@ -148,7 +148,7 @@
          "longitude":-68.7667,
          "year":2014,
          "eventID":"Sheila_Asteroids",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"COMPLETED ASTEROIDS",
@@ -159,7 +159,7 @@
          "longitude":-60.7667,
          "year":2014,
          "eventID":"Other_Asteroids",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"death",
@@ -170,7 +170,7 @@
          "longitude":111.6608,
          "year":2015,
          "eventID":"Sheila_Death",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"birth",
@@ -181,7 +181,7 @@
          "longitude":140.7333,
          "year":1970,
          "eventID":"Davis_Birth",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"birth",
@@ -192,7 +192,7 @@
          "longitude":101.6000,
          "year":1948,
          "eventID":"Blaine_Birth",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"death",
@@ -203,7 +203,7 @@
          "longitude":-0.1000,
          "year":2017,
          "eventID":"Betty_Death",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"Graduated from BYU",
@@ -214,7 +214,7 @@
          "longitude": -111.6585,
          "year":1879,
          "eventID":"BYU_graduation",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"marriage",
@@ -225,7 +225,7 @@
          "longitude": 127.45,
          "year":1895,
          "eventID":"Rodham_Marriage",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"Did a backflip",
@@ -236,7 +236,7 @@
          "longitude": -114.5333,
          "year":1890,
          "eventID":"Mrs_Rodham_Backflip",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"learned Java",
@@ -247,7 +247,7 @@
          "longitude": 3.2167,
          "year":1890,
          "eventID":"Mrs_Rodham_Java",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"Caught a frog",
@@ -258,7 +258,7 @@
          "longitude": -76.6667,
          "year":1993,
          "eventID":"Jones_Frog",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"marriage",
@@ -269,7 +269,7 @@
          "longitude": 0.85,
          "year":1997,
          "eventID":"Jones_Marriage",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"Ate Brazilian Barbecue",
@@ -280,7 +280,7 @@
          "longitude": -48.75,
          "year":2012,
          "eventID":"Mrs_Jones_Barbecue",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"Learned to Surf",
@@ -291,7 +291,7 @@
          "longitude": 153.4,
          "year": 2000,
          "eventID":"Mrs_Jones_Surf",
-         "username":"sheila"
+         "associatedUsername":"sheila"
       },
       {
          "eventType":"birth",
@@ -302,7 +302,7 @@
          "longitude":-81.1,
          "year":2016,
          "eventID":"Thanks_Woodfield",
-         "username":"patrick"
+         "associatedUsername":"patrick"
       },
       {
          "eventType":"marriage",
@@ -313,7 +313,7 @@
          "longitude":-115.8,
          "year":2016,
          "eventID":"True_Love",
-         "username":"patrick"
+         "associatedUsername":"patrick"
       },
       {
          "eventType":"marriage",
@@ -324,7 +324,7 @@
          "longitude":-115.8,
          "year":2016,
          "eventID":"Together_Forever",
-         "username":"patrick"
+         "associatedUsername":"patrick"
       }
    ]
 }
