@@ -1,0 +1,37 @@
+
+CREATE TABLE IF NOT EXISTS User (
+	userName	TEXT NOT NULL,
+	password	TEXT NOT NULL,
+	email		TEXT NOT NULL,
+	firstName	TEXT NOT NULL,
+	lastName	TEXT NOT NULL,
+	gender		TEXT NOT NULL,
+	personID	TEXT NOT NULL PRIMARY KEY
+);
+CREATE TABLE IF NOT EXISTS Person (
+	personID	TEXT NOT NULL PRIMARY KEY,
+	associatedUsername TEXT NOT NULL,
+	firstName	TEXT NOT NULL,
+	lastName	TEXT NOT NULL,
+	gender		TEXT NOT NULL,
+	fatherID	TEXT,
+	motherID	TEXT,
+	spouseID	TEXT
+);
+
+CREATE TABLE IF NOT EXISTS Event (
+	eventID		TEXT NOT NULL PRIMARY KEY,
+	associatedUsername TEXT NOT NULL,
+	personID 	TEXT NOT NULL,
+	latitude	REAL NOT NULL,
+	longitude	REAL NOT NULL,
+	country		TEXT NOT NULL,
+	city		TEXT NOT NULL,
+	eventType	TEXT NOT NULL,
+	year		INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS AuthToken (
+	authToken	TEXT NOT NULL PRIMARY KEY,
+	userName	TEXT NOT NULL
+);
