@@ -48,7 +48,9 @@ public class EventService {
         String authToken = request.getAuthToken();
         String userName = atDao.getUserName(authToken);
         if(userName == null){
-            return null;
+            db.closeConnection(true);
+            String message = "Error: username is null";
+            return new EventResponse(message, false);
         }
 
         //get all family members or single
@@ -104,7 +106,6 @@ public class EventService {
         }
 
         db.closeConnection(true);
-        String message = "Successfully got all the Event objects";
-        return new EventResponse(eventList, message, true);
+        return new EventResponse(eventList, true);
     }
 }

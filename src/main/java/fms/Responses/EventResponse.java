@@ -33,11 +33,11 @@ public class EventResponse implements IResponse{
     /**
      * Latitude: Latitude of event’s location
      */
-    private Float latitude;
+    private double latitude;
     /**
      * Longitude: Longitude of event’s location
      */
-    private Float longitude;
+    private double longitude;
     /**
      * Person ID: ID of person to which this event belongs
      */
@@ -45,7 +45,7 @@ public class EventResponse implements IResponse{
     /**
      * Year: Year in which event occurred
      */
-    private Integer year;
+    private int year;
     /**
      * Contains data for all events for this person
      */
@@ -67,23 +67,23 @@ public class EventResponse implements IResponse{
 
     /**
      * constructor for one Event
+     * @param eventType Type of event (birth, baptism, christening, marriage, death, etc.)
      * @param city City in which event occurred
      * @param country Country in which event occurred
      * @param associatedUsername User (Username) to which this person belongs
      * @param eventID Unique identifier for this event (non-empty string)
-     * @param eventType Type of event (birth, baptism, christening, marriage, death, etc.)
      * @param latitude Latitude of event’s location
      * @param longitude longitude of event’s location
      * @param personID ID of person to which this event belongs
      * @param year Year in which event occurred
      * @param success Tells if request was successful or not
      */
-    public EventResponse(String associatedUsername, String eventID, String personID, float latitude, float longitude, String country,String city, String eventType, int year, Boolean success) {
+    public EventResponse(String associatedUsername, String eventID, String personID, double latitude, double longitude, String country,String city, String eventType, int year, Boolean success) {
+        this.eventType = eventType;
         this.city = city;
         this.country = country;
         this.associatedUsername = associatedUsername;
         this.eventID = eventID;
-        this.eventType = eventType;
         this.latitude = latitude;
         this.longitude = longitude;
         this.personID = personID;
@@ -94,12 +94,10 @@ public class EventResponse implements IResponse{
     /**
      * constructor for many Events
      * @param data Contains data for all events for this person
-     * @param message Tells success/error messages
      * @param success Tells if completed successfully or not
      */
-    public EventResponse(ArrayList<Event> data, String message, Boolean success) {
+    public EventResponse(ArrayList<Event> data, Boolean success) {
         this.data = data;
-        this.message = message;
         this.success = success;
     }
 
@@ -170,7 +168,7 @@ public class EventResponse implements IResponse{
         this.eventType = eventType;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -178,7 +176,7 @@ public class EventResponse implements IResponse{
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 

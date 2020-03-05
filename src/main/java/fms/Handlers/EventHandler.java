@@ -52,7 +52,7 @@ public class EventHandler implements HttpHandler {
                     String personID = getOneEvent(inputExchange.getRequestURI().toString());
                     EventRequest request = new EventRequest(authToken, personID, (personID == null));
                     EventResponse response = new EventService().getEvent(request);
-                    if(!response.getSuccess()){
+                    if(!response.getSuccess()){//clear test response is null here
                         inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                         EventResponse resp = new EventResponse("Error: user already exists", false);
                         inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
