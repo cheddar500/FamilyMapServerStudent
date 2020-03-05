@@ -25,16 +25,15 @@ public class Generate {
 
 
 
-    public void generateInfo(User user, int generation, Connection conn) throws DataAccessException, IOException {
+    public void generateInfo(Person userPerson, int generation, Connection conn) throws DataAccessException, IOException {
         PersonDao pDao = new PersonDao(conn);
         EventDao eDao = new EventDao(conn);
-        Person userPerson = pDao.getPerson(user.getPersonID());
         //Add at least the original user
         pDao.addPerson(userPerson);
         //Original user has to have at least a birth
         final int CURRENT_YEAR = 2020;
         int year = CURRENT_YEAR - 25;
-        eDao.addEvent(generateEvent(user.getUserName(),userPerson.getPersonID(),getRandomLocation(),
+        eDao.addEvent(generateEvent(userPerson.getUsername(),userPerson.getPersonID(),getRandomLocation(),
                 "birth",year));
         //Add additional generations as requested recursively
         recurse(userPerson, generation, pDao, eDao);

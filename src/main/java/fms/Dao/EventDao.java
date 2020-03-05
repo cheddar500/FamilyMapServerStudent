@@ -168,6 +168,8 @@ public class EventDao {
                         rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
                         rs.getInt("year")));
             }
+            conn.commit();
+            stmt.close();
             return events;
         } catch (SQLException e) {
             e.printStackTrace();

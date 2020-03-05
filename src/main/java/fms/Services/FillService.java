@@ -63,6 +63,10 @@ public class FillService {
         //If there is any data in the database already associated with the given user name, it is deleted
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //?????????check if null for data as well and throw error or always fine since already registered????***************************?????????????????
+        //before we delete, I need to save the users Person object
+        String personID =  user.getPersonID();
+        PersonDao pDao = new PersonDao(conn);
+        Person userPerson = pDao.getPerson(personID);
         deleteUserData(conn, userName);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +80,7 @@ public class FillService {
         // Based on the requested number of generations, you should fill out the user’s family tree with generated Person and Event data.
 //        addGeneratedFamilyToTree(conn, request, user);
         Generate getData = new Generate();
-        getData.generateInfo(user, request.getNumOfGenerations(), conn);
+        getData.generateInfo(userPerson, request.getNumOfGenerations(), conn);
 
         /////////////////////////////////////////////
         //Close connection, return response
