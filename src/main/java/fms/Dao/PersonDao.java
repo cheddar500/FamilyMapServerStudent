@@ -170,7 +170,8 @@ public class PersonDao {
                         rs.getString("firstName"), rs.getString("lastName"), rs.getString("gender"),
                         rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID")));
             }
-//            stmt.close();
+            conn.commit();
+            stmt.close();
             return persons;
         } catch (SQLException e) {
             e.printStackTrace();
