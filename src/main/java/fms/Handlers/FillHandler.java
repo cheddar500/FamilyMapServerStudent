@@ -9,6 +9,7 @@ import fms.Services.FillService;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
 
 /**
  * This class is used for queries with requests to serverIP:Port/fill/[username]/{generations} to create and return data from FillService
@@ -45,7 +46,6 @@ public class FillHandler implements HttpHandler {
                 return 4;
             }
             else {
-                //there was no number of generations specified
                 Integer finalAnswer = Integer.parseInt(result.toString());
                 if (finalAnswer > -1) {
                     return finalAnswer;
@@ -100,7 +100,7 @@ public class FillHandler implements HttpHandler {
                 inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
 
             }
-        } catch(DataAccessException e){
+        } catch(DataAccessException | SQLException e){
             inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             FillResponse resp = new FillResponse(e.getMessage(), false);
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());

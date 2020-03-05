@@ -101,13 +101,13 @@ public class EventDao {
 
     /**
      * Delete an Event passed in
-     * @param associatedUsername Event to be deleted
+     * @param eventID Event to be deleted
      */
-    public void deleteEvent(String associatedUsername) throws DataAccessException {
-        String sql = "DELETE FROM Event WHERE associatedUsername = ?";
+    public void deleteEvent(String eventID) throws DataAccessException {
+        String sql = "DELETE FROM Event WHERE eventID = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, associatedUsername );
-            stmt.execute();
+            stmt.setString(1, eventID );
+            stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while deleting event");

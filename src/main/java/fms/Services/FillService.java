@@ -14,6 +14,7 @@ import fms.Responses.FillResponse;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +37,7 @@ public class FillService {
      * @return Returns FillResponse object with info about Request
      * @throws DataAccessException
      */
-    public FillResponse fill(FillRequest request) throws DataAccessException, IOException {
+    public FillResponse fill(FillRequest request) throws DataAccessException, IOException, SQLException {
         Database db = new Database();
         Connection conn = db.openConnection();
 
