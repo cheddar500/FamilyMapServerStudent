@@ -21,7 +21,7 @@ public class EventResponse implements IResponse{
     /**
      * Associated Username: User (Username) to which this person belongs
      */
-    private String username;
+    private String associatedUsername;
     /**
      * Event ID: Unique identifier for this event (non-empty string)
      */
@@ -69,27 +69,25 @@ public class EventResponse implements IResponse{
      * constructor for one Event
      * @param city City in which event occurred
      * @param country Country in which event occurred
-     * @param username User (Username) to which this person belongs
+     * @param associatedUsername User (Username) to which this person belongs
      * @param eventID Unique identifier for this event (non-empty string)
      * @param eventType Type of event (birth, baptism, christening, marriage, death, etc.)
      * @param latitude Latitude of event’s location
      * @param longitude longitude of event’s location
      * @param personID ID of person to which this event belongs
      * @param year Year in which event occurred
-     * @param message Tells success/error messages
      * @param success Tells if request was successful or not
      */
-    public EventResponse(String city, String country, String username, String eventID, String eventType, float latitude, float longitude, String personID, int year, String message, Boolean success) {
+    public EventResponse(String associatedUsername, String eventID, String personID, float latitude, float longitude, String country,String city, String eventType, int year, Boolean success) {
         this.city = city;
         this.country = country;
-        this.username = username;
+        this.associatedUsername = associatedUsername;
         this.eventID = eventID;
         this.eventType = eventType;
         this.latitude = latitude;
         this.longitude = longitude;
         this.personID = personID;
         this.year = year;
-        this.message = message;
         this.success = success;
     }
 
@@ -149,11 +147,11 @@ public class EventResponse implements IResponse{
     }
 
     public String getUsername() {
-        return username;
+        return associatedUsername;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String associatedUsername) {
+        this.associatedUsername = associatedUsername;
     }
 
     public String getEventID() {

@@ -36,7 +36,7 @@ public class LoadRequest {
      * @param persons List of Persons to be added to the database
      * @param users List of Users to be added to the database
      */
-    public LoadRequest(ArrayList<Event> events, ArrayList<Person> persons, ArrayList<User> users) {
+    public LoadRequest(ArrayList<User> users , ArrayList<Person> persons, ArrayList<Event> events) {
         this.events = events;
         this.persons = persons;
         this.users = users;

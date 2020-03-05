@@ -129,6 +129,7 @@ public class UserDao {
             }
             //throw an error if invalid password, include word "error" and 400 number
             if(!validPassword){
+
                 throw new DataAccessException("Error 400 number : invalid password");
                 //return null;
             }

@@ -46,13 +46,16 @@ public class PersonService {
         PersonDao pDao = new PersonDao(conn);
         //if only requested to get one person
         if(!request.getGetAll()){
-            Person result = new Person();
-            String message = "Successfully got one Person";
-            result = pDao.getPerson(request.getPersonID());
+            Person result = pDao.getPerson(request.getPersonID());
+            if(!result.getUsername().equals(userName)){
+                db.closeConnection(true);
+                String message = "Error: requested person doesn't belong to you";
+                return new PersonResponse(message, false);
+            }
             db.closeConnection(true);
-            return new PersonResponse(request.getPersonID(),result.getUsername(),result.getFirstName(),
+            return new PersonResponse(userName,request.getPersonID(),result.getFirstName(),
             result.getLastName(), result.getGender(),result.getFatherID(),result.getMotherID(),
-                    result.getSpouseID(),message,true);
+                    result.getSpouseID(),true);
         }
         //otherwise get all connected persons
         ArrayList<Person> personList = new ArrayList<>();

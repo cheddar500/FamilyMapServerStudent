@@ -59,16 +59,15 @@ public class EventService {
             String message = "Successfully got one Event";
             result = eDao.getEvent(request.getEventID());
             return new EventResponse(
-                    result.getCity(),
-                    result.getCountry(),
                     userName,
                     result.getEventID(),
-                    result.getEventType(),
+                    result.getPersonID(),
                     (float) result.getLatitude(),
                     (float) result.getLongitude(),
-                    result.getPersonID(),
+                    result.getCountry(),
+                    result.getCity(),
+                    result.getEventType(),
                     result.getYear(),
-                    message,
                     true);
         }
         //otherwise get all connected persons

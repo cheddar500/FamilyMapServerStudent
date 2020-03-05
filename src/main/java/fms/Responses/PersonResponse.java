@@ -17,7 +17,7 @@ public class PersonResponse implements IResponse{
     /**
      * Associated Username: User (Username) to which this person belongs
      */
-    private String userName;
+    private String associatedUsername;
     /**
      * First Name: Person’s first name (non-empty string)
      */
@@ -64,26 +64,24 @@ public class PersonResponse implements IResponse{
     /**
      * constructor for getting one Person
      * @param personID Person ID: Unique identifier for this person (non-empty string)
-     * @param userName Associated Username: User (Username) to which this person belongs
+     * @param associatedUsername Associated Username: User (Username) to which this person belongs
      * @param firstName First Name: Person’s first name (non-empty string)
      * @param lastName Last Name: Person’s last name (non-empty string)
      * @param gender Gender: Person’s gender (string: f or m)
      * @param fatherID Father ID: Person ID of person’s father (possibly null)
      * @param motherID Mother ID: Person ID of person’s mother (possibly null)
      * @param spouseID Spouse ID: Person ID of person’s spouse (possibly null)
-     * @param message Tells success/error messages
      * @param success Tells if completed successfully or not
      */
-    public PersonResponse(String personID, String userName, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID,  String message, Boolean success) {
+    public PersonResponse(String associatedUsername, String personID, String firstName, String lastName, String gender, String fatherID, String motherID, String spouseID,  Boolean success) {
         this.personID = personID;
-        this.userName = userName;
+        this.associatedUsername = associatedUsername;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.fatherID = fatherID;
         this.motherID = motherID;
         this.spouseID = spouseID;
-        this.message = message;
         this.success = success;
     }
 
@@ -129,11 +127,11 @@ public class PersonResponse implements IResponse{
     }
 
     public String getUserName() {
-        return userName;
+        return associatedUsername;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName(String associatedUsername) {
+        this.associatedUsername = associatedUsername;
     }
 
     public String getFirstName() {

@@ -32,7 +32,7 @@ public class ClearService {
         new EventDao(conn).clear();
         new PersonDao(conn).clear();
         new UserDao(conn).clear();
-        String message = "Successfully cleared";
+        String message = "Clear succeeded";
         db.closeConnection(true);
         return new ClearResponse(message, true);
     }
