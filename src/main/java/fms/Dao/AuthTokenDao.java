@@ -36,8 +36,8 @@ public class AuthTokenDao {
             //question mark found in our sql String
             stmt.setString(1, authToken.getAuthToken());
             stmt.setString(2, authToken.getUserName());
-
             stmt.executeUpdate();
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while inserting into the database");
         }
@@ -50,7 +50,7 @@ public class AuthTokenDao {
         String sql = "DELETE FROM AuthToken";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
-            stmt.close();
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while clearing AuthToken in the database");
         }
@@ -97,7 +97,7 @@ public class AuthTokenDao {
         String sql = "DELETE FROM AuthToken WHERE authToken = "+authToken;
         try (Statement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate(sql);
-            stmt.close();
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while deleting authToken");
         }

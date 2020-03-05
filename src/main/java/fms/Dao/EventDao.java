@@ -57,6 +57,7 @@ public class EventDao {
             stmt.setInt(9, event.getYear());
 
             stmt.executeUpdate();
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while inserting event into the database");
         }
@@ -69,6 +70,7 @@ public class EventDao {
         String sql = "DELETE FROM Event";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while clearing event in the database");
         }
@@ -106,6 +108,7 @@ public class EventDao {
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, associatedUsername );
             stmt.execute();
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while deleting event");
         }

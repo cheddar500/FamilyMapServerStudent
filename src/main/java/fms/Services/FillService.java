@@ -95,14 +95,14 @@ public class FillService {
      * @throws DataAccessException
      */
     private void deleteUserData(Connection conn, String userName) throws DataAccessException {
-//        ArrayList<Person> associatedPeople;
-//        ArrayList<Event> associatedEvents;
+        ArrayList<Person> associatedPeople;
+        ArrayList<Event> associatedEvents;
         PersonDao pDao = new PersonDao(conn);
         EventDao eDao = new EventDao(conn);
-//        associatedPeople = pDao.getPersonsOf(userName);
-//        associatedEvents = eDao.getEventsOf(userName);
-        pDao.deletePerson(userName);
-        eDao.deleteEvent(userName);
+        associatedPeople = pDao.getPersonsOf(userName);
+        associatedEvents = eDao.getEventsOf(userName);
+        pDao.deleteAllPersons(associatedPeople);
+        eDao.deleteAllEvents(associatedEvents);
     }
 
 

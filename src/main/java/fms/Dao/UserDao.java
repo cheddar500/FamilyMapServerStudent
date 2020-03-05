@@ -46,6 +46,7 @@ public class UserDao {
             stmt.setString(7, user.getPersonID());
 
             stmt.executeUpdate();
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while inserting user into the database");
         }
@@ -58,6 +59,7 @@ public class UserDao {
         String sql = "DELETE FROM User";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
+            conn.commit();
         } catch (SQLException e) {
             throw new DataAccessException("Error encountered while clearing User in the database");
         }
