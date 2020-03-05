@@ -33,7 +33,7 @@ public class LoginService {
         UserDao uDao = new UserDao(conn);
         User user = uDao.login(request.getUserName(), request.getPassword());
         //check validity of login
-        if(user == null){
+        if(user == null || request.getUserName() == null || request.getPassword() == null){
             db.closeConnection(true);
             return new LoginResponse("User/Password combo doesn't exist", false);
         }

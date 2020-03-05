@@ -30,22 +30,30 @@ public class LoginHandler implements HttpHandler {
     public void handle(HttpExchange inputExchange) throws IOException {
         System.out.println("Attempting to post "+inputExchange.getRequestURI());
         try{
-            if(inputExchange.getRequestMethod().toUpperCase().equals("POST")){
+            if(inputExchange.getRequestMethod().toUpperCase().equals("POST")) {
                 Scanner scan = new Scanner(inputExchange.getRequestBody());
                 StringBuilder sb = new StringBuilder();
-                while(scan.hasNext()){
-                    sb.append(scan.next()); sb.append(" ");
+                while (scan.hasNext()) {
+                    sb.append(scan.next());
+                    sb.append(" ");
                 }
                 String requestString = sb.toString();
                 LoginRequest request = JsonSerializer.deserialize(requestString, LoginRequest.class);
                 LoginResponse response = new LoginService().login(request);
-                //send that it was ok
-                inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                //give me where I need to write what happened -> write the response we got
-                inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
+                if (!response.getSuccess()){
+                    inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    LoginResponse resp = new LoginResponse("Error: User/Password combo doesn't exist", false);
+                    inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
+                } else {
+                    //send that it was ok
+                    inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    //give me where I need to write what happened -> write the response we got
+                    inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
+                }
             }
         } catch(DataAccessException | IOException e){
-            inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+//            inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+            inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             LoginResponse resp = new LoginResponse(e.getMessage(), false);
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();

@@ -37,7 +37,9 @@ public class PersonService {
         String authToken = request.getAuthToken();
         String userName = atDao.getUserName(authToken);
         if(userName == null){
-            return null;
+            db.closeConnection(true);
+            String message = "Error: null username";
+            return new PersonResponse(message, false);
         }
 
         //get all family members or single
@@ -47,7 +49,8 @@ public class PersonService {
             Person result = new Person();
             String message = "Successfully got one Person";
             result = pDao.getPerson(request.getPersonID());
-            return new PersonResponse(request.getPersonID(),userName,result.getFirstName(),
+            db.closeConnection(true);
+            return new PersonResponse(request.getPersonID(),result.getUsername(),result.getFirstName(),
             result.getLastName(), result.getGender(),result.getFatherID(),result.getMotherID(),
                     result.getSpouseID(),message,true);
         }
