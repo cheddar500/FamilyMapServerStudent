@@ -160,7 +160,7 @@ public class PersonDao {
     public ArrayList<Person> getPersonsOf(String username) throws DataAccessException {
         ArrayList<Person> persons = null;
         ResultSet rs = null;
-        String sql = "SELECT * FROM Person WHERE associatedUsername = ?";//;
+        String sql = "SELECT * FROM Person WHERE associatedUsername = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             rs = stmt.executeQuery();
@@ -170,7 +170,7 @@ public class PersonDao {
                         rs.getString("firstName"), rs.getString("lastName"), rs.getString("gender"),
                         rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID")));
             }
-            stmt.close();
+//            stmt.close();
             return persons;
         } catch (SQLException e) {
             e.printStackTrace();
