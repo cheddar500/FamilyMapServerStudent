@@ -35,7 +35,6 @@ public class RegisterService {
      */
     public RegisterResponse register(RegisterRequest request) throws DataAccessException, IOException {
         Database db = new Database();
-        Connection conn = db.openConnection();
         ////////////////////////
         //Create a new account
         ////////////////////////
@@ -47,7 +46,7 @@ public class RegisterService {
 //        * @param password Users password
 //        * @param userName Users username
         //make user and store in database
-        UserDao uDao = new UserDao(conn);
+        UserDao uDao = new UserDao(db);
         //user:
 //        * @param userName UserName: Unique user name (non-empty string)
 //        * @param password Password: User’s password (non-empty string)
@@ -60,7 +59,6 @@ public class RegisterService {
         //if user already exists, can't register them
         User testIfExits = uDao.getUser(userName);
         if(testIfExits != null){
-            db.closeConnection(true);
             String message = "Error: user already exists";
             return new RegisterResponse(message, false);
         }
@@ -72,22 +70,21 @@ public class RegisterService {
         ////////////////////////////////////////////
         //generate 4 generations of ancestor data
         ////////////////////////////////////////////
-        PersonDao pDao = new PersonDao(conn);
+        PersonDao pDao = new PersonDao(db);
         Person userPerson = new Person(user.getPersonID(), user.getUserName(), user.getFirstName(), user.getLastName(),
                 user.getGender(), UUID.randomUUID().toString(), UUID.randomUUID().toString(),null);
         Generate getData = new Generate();
-        getData.generateInfo(userPerson, 4, conn);
+        //getData.generateInfo(userPerson, 4, db);
 
         ///////////////////////////
         //logs the user in
         ////////////////////////////
         //Register attempt seems valid, try to get authToken
-        AuthTokenDao atDao = new AuthTokenDao(conn);
+        AuthTokenDao atDao = new AuthTokenDao(db);
         String authToken = atDao.generateAuthToken();
         atDao.addAuthToken(new AuthToken(authToken, userName));
 
         //all done, make sure to return authToken
-        db.closeConnection(true);
         return new RegisterResponse(authToken, userName, personID,true);
     }
 }

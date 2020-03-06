@@ -33,37 +33,33 @@ public class PersonService {
         Database db = new Database();
         Connection conn = db.openConnection();
         //use authToken get username, if null invalid
-        AuthTokenDao atDao = new AuthTokenDao(conn);
+        AuthTokenDao atDao = new AuthTokenDao(db);
         String authToken = request.getAuthToken();
         String userName = atDao.getUserName(authToken);
         if(userName == null){
-            db.closeConnection(true);
             String message = "Error: null username";
             return new PersonResponse(message, false);
         }
 
         //get all family members or single
-        PersonDao pDao = new PersonDao(conn);
+        PersonDao pDao = new PersonDao(db);
         //if only requested to get one person
         if(!request.getGetAll()){
             Person result = pDao.getPerson(request.getPersonID());
             if(!result.getUsername().equals(userName)){
-                db.closeConnection(true);
                 String message = "Error: requested person doesn't belong to you";
                 return new PersonResponse(message, false);
             }
-            db.closeConnection(true);
             return new PersonResponse(userName,request.getPersonID(),result.getFirstName(),
             result.getLastName(), result.getGender(),result.getFatherID(),result.getMotherID(),
                     result.getSpouseID(),true);
         }
         //otherwise get all connected persons
-        ArrayList<Person> personList = new ArrayList<>();
+        ArrayList<Person> personList;
         personList = pDao.getPersonsOf(userName);
         //two returns:
         // user has no persons --> null
         if (personList.size() == 0) {
-            db.closeConnection(true);
             String message = "Error: user has no Person objects, null";
             return new PersonResponse(message, false);
         }
@@ -74,23 +70,20 @@ public class PersonService {
         //means try to match person obj from given personID to person obj from authToken, must match
         if(!request.getGetAll()) {
             try {
-                String usernameFromID = null;
+                String usernameFromID;
                 String personID = request.getPersonID();
                 Person tempPerson = pDao.getPerson(personID);
                 usernameFromID = tempPerson.getUsername();
                 if (!userName.equals(usernameFromID)) {
-                    db.closeConnection(true);
                     String message = "Error: authToken and personID don't match, invalid privileges";
                     return new PersonResponse(message, false);
                 }
             } catch (Exception e) {
-                db.closeConnection(true);
                 String message = "Error: Failed to get all Person objects";
                 return new PersonResponse(message, false);
             }
         }
 
-        db.closeConnection(true);
         String message = "Successfully got all the Person objects";
         return new PersonResponse(message, true, personList);
     }

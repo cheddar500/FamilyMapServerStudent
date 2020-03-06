@@ -1,8 +1,10 @@
 package fms.Dao;
 
+import fms.Database;
 import fms.Exceptions.DataAccessException;
 import fms.Model.Event;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
 
 import java.util.ArrayList;
@@ -14,13 +16,13 @@ import java.util.List;
 public class EventDao {
 
 
-    private final Connection conn;
+    private final Database db;
 
     /**
      * This is the constructor for EventDao
-     * @param conn Instances our connection
+     * @param db Instances our connection
      */
-    public EventDao(Connection conn) {this.conn = conn;}
+    public EventDao(Database db) {this.db = db;}
 
 
     /**
@@ -28,8 +30,8 @@ public class EventDao {
      * @param eventList list of Event to be added
      */
     public void addAllEvents(List<Event> eventList) throws DataAccessException {
-        for (int i = 0; i < eventList.size(); i++) {
-            addEvent(eventList.get(i));
+        for (Event event : eventList) {
+            addEvent(event);
         }
     }
 
@@ -38,6 +40,7 @@ public class EventDao {
      * @param event Event to be added
      */
     public void addEvent(Event event) throws DataAccessException {
+        Connection conn = db.getConnection();
         //We can structure our string to be similar to a sql command, but if we insert question
         //marks we can change them later with help from the statement
         String sql = "INSERT INTO Event (eventID, associatedUsername, personID, latitude, longitude," +
@@ -57,8 +60,9 @@ public class EventDao {
             stmt.setInt(9, event.getYear());
 
             stmt.executeUpdate();
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while inserting event into the database");
         }
     }
@@ -67,11 +71,13 @@ public class EventDao {
      * Clear out all data from the Event table in the database
      */
     public void clear() throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "DELETE FROM Event";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while clearing event in the database");
         }
     }
@@ -81,8 +87,8 @@ public class EventDao {
      * @param eventList list of Event to be deleted
      */
     public void deleteAllEvents(List<Event> eventList) throws DataAccessException {
-        for (int i = 0; i < eventList.size(); i++) {
-            deleteEvent(eventList.get(i).getEventID());
+        for (Event event : eventList) {
+            deleteEvent(event.getEventID());
         }
     }
 
@@ -92,12 +98,14 @@ public class EventDao {
      * @param eventID Event to be deleted
      */
     public void deleteEvent(String eventID) throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "DELETE FROM Event WHERE eventID = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eventID );
             stmt.executeUpdate();
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while deleting event");
         }
     }
@@ -108,6 +116,7 @@ public class EventDao {
      * @return Return requested Event from Event table
      */
     public Event getEvent(String eventID) throws DataAccessException {
+        Connection conn = db.getConnection();
         Event event;
         ResultSet rs = null;
         String sql = "SELECT * FROM Event WHERE eventID = ?";
@@ -119,10 +128,12 @@ public class EventDao {
                         rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
                         rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
                         rs.getInt("year"));
+                db.closeConnection(true);
                 return event;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while finding event");
         } finally {
             if(rs != null) {
@@ -143,6 +154,7 @@ public class EventDao {
      * @return Return all Event for requested USer from table
      */
     public ArrayList<Event> getEventsOf(String username) throws DataAccessException {
+        Connection conn = db.getConnection();
         ArrayList<Event> events = null;
         ResultSet rs = null;
         String sql = "SELECT * FROM Event WHERE associatedUsername = ?";
@@ -156,11 +168,11 @@ public class EventDao {
                         rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
                         rs.getInt("year")));
             }
-            conn.commit();
-            stmt.close();
+            db.closeConnection(true);
             return events;
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while finding events of event");
         } finally {
             if(rs != null) {
@@ -170,7 +182,6 @@ public class EventDao {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 }

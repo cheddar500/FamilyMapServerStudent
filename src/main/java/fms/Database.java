@@ -39,6 +39,7 @@ public class Database {
     //**********************************************************************************************
 
     public Connection getConnection() throws DataAccessException {
+        System.out.println("Getting DB Connection");
         if(conn == null) {
             return openConnection();
         } else {
@@ -79,6 +80,7 @@ public class Database {
     //DATABASE TO LOCK. YOUR CODE MUST ALWAYS INCLUDE A CLOSURE OF THE DATABASE NO MATTER WHAT ERRORS
     //OR PROBLEMS YOU ENCOUNTER
     public void closeConnection(boolean commit) throws DataAccessException {
+        System.out.println("Closing DB Connection");
         try {
             if (commit) {
                 //This will commit the changes to the database

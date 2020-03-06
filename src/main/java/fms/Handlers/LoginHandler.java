@@ -44,11 +44,13 @@ public class LoginHandler implements HttpHandler {
                     inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                     LoginResponse resp = new LoginResponse("Error: User/Password combo doesn't exist", false);
                     inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
+                    System.out.println(resp.toString());
                 } else {
                     //send that it was ok
                     inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                     //give me where I need to write what happened -> write the response we got
                     inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
+                    System.out.println(response.toString());
                 }
             }
         } catch(DataAccessException | IOException e){
@@ -56,7 +58,8 @@ public class LoginHandler implements HttpHandler {
             inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
             LoginResponse resp = new LoginResponse(e.getMessage(), false);
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
-            e.printStackTrace();
+            System.out.println("*****" + e.getMessage());
+            //e.printStackTrace();
         }
         inputExchange.close();
     }

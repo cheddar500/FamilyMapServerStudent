@@ -25,9 +25,9 @@ public class Generate {
 
 
 
-    public void generateInfo(Person userPerson, int generation, Connection conn) throws DataAccessException, IOException {
-        PersonDao pDao = new PersonDao(conn);
-        EventDao eDao = new EventDao(conn);
+    public void generateInfo(Person userPerson, int generation, Database db) throws DataAccessException, IOException {
+        PersonDao pDao = new PersonDao(db);
+        EventDao eDao = new EventDao(db);
         //Add at least the original user
         ArrayList<Event> events = new ArrayList<>();
         ArrayList<Person> persons = new ArrayList<>();

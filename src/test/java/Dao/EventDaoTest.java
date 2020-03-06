@@ -35,7 +35,6 @@ class EventDaoTest {
         //lets clear the tables so that any data we entered for testing doesn't linger in our files
         db.openConnection();
         db.clearTables();
-        db.closeConnection(true);
     }
 
     @Test
@@ -47,16 +46,14 @@ class EventDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             //While addEvent returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             eDao.addEvent(bestEvent);
             //So lets use a find method to get the event that we just put in back out
             compareTest = eDao.getEvent(bestEvent.getEventID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         //First lets see if our find found anything at all. If it did then we know that if nothing
         //else something was put into our database, since we cleared it in the beginning
@@ -76,18 +73,16 @@ class EventDaoTest {
         // so we are doing it another way.
         boolean didItWork = true;
         try {
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             //if we call the method the first time it will addEvent it successfully
             eDao.addEvent(bestEvent);
             //but our sql table is set up so that "eventID" must be unique. So trying to addEvent it
             //again will cause the method to throw an exception
             eDao.addEvent(bestEvent);
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //If we catch an exception we will end up in here, where we can change our boolean to
             //false to show that our function failed to perform correctly
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
             didItWork = false;
         }
         //Check to make sure that we did in fact enter our catch statement
@@ -99,14 +94,12 @@ class EventDaoTest {
         //Set our compareTest to an actual event
         Event compareTest = bestEvent;
         try {
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             //and then get something back from our find. If the event is not in the database we
             //should have just changed our compareTest to a null object
             compareTest = eDao.getEvent(bestEvent.getEventID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
 
         //Now make sure that compareTest is indeed null
@@ -123,16 +116,14 @@ class EventDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             //While addEvent returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             eDao.addEvent(bestEvent);
             eDao.clear();
             compareTest = eDao.getEvent(bestEvent.getEventID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         //First lets see if our find found anything at all. If it did then we know that if nothing
         //else something was put into our database, since we cleared it in the beginning
@@ -148,15 +139,13 @@ class EventDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             //While addEvent(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             eDao.addEvent(bestEvent);
             compareTest = eDao.getEvent(bestEvent.getEventID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNotNull(compareTest);
     }
@@ -169,16 +158,14 @@ class EventDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             //While addEvent(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             eDao.addEvent(bestEvent);
             String fakeEventID = "imafakeid";
             compareTest = eDao.getEvent(fakeEventID);
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(compareTest);
     }
@@ -200,15 +187,13 @@ class EventDaoTest {
         eventList.add(p1); eventList.add(p2); eventList.add(p3);
         Event test1 = null; Event test2 = null; Event test3 = null;
         try{
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             eDao.addAllEvents(eventList);
             test1 = eDao.getEvent("Biking_123A");
             test2 = eDao.getEvent("Biking_123B");
             test3 = eDao.getEvent("Biking_123C");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertEquals(p1, test1);
         Assertions.assertEquals(p2, test2);
@@ -230,21 +215,19 @@ class EventDaoTest {
         eventList.add(p1); eventList.add(p2); eventList.add(p3);
         Event test1 = null; Event test2 = null; Event test3 = null;
         try{
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             eDao.addEvent(p1); eDao.addEvent(p2); eDao.addEvent(p3);
             //Now trying to add all duplicates
             eDao.addAllEvents(eventList);
             test1 = eDao.getEvent(eventList.get(0).getEventID());
             test2 = eDao.getEvent(eventList.get(1).getEventID());
             test3 = eDao.getEvent(eventList.get(2).getEventID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //All adding should have failed due to duplication
             Assertions.assertNull(test1);
             Assertions.assertNull(test2);
             Assertions.assertNull(test3);
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -253,14 +236,12 @@ class EventDaoTest {
         EventDao eDao;
         Event testMan = null;
         try{
-            Connection conn = db.openConnection();
-            eDao = new EventDao(conn);
+            eDao = new EventDao(db);
             eDao.addEvent(bestEvent);
             eDao.deleteEvent(bestEvent.getEventID());
             testMan = eDao.getEvent(bestEvent.getEventID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(testMan);
     }
@@ -268,18 +249,16 @@ class EventDaoTest {
     void deleteEventFail() throws DataAccessException {
         EventDao eDao;
         Event testMan = bestEvent;
-        Connection conn = db.openConnection();
-        eDao = new EventDao(conn);
+        eDao = new EventDao(db);
         try{
             Assertions.assertNotNull(testMan);
             eDao.addEvent(bestEvent);
             //deleting a person that doesn't exist will throw an error we can catch
             eDao.deleteEvent("fakeID");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //The original person we added should still be there
             testMan = eDao.getEvent(bestEvent.getEventID());
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNotNull(testMan);
     }
@@ -299,16 +278,14 @@ class EventDaoTest {
         eventList.add(p1); eventList.add(p2); eventList.add(p3);
         Event test1 = null; Event test2 = null; Event test3 = null;
         try{
-            Connection conn = db.openConnection();
-            EventDao eDao = new EventDao(conn);
+            EventDao eDao = new EventDao(db);
             eDao.addAllEvents(eventList);
             eDao.deleteAllEvents(eventList);
             test1 = eDao.getEvent("id1");
             test2 = eDao.getEvent("id2");
             test3 = eDao.getEvent("id3");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(test1);
         Assertions.assertNull(test2);
@@ -329,18 +306,16 @@ class EventDaoTest {
         //only add two of the test people
         eventList.add(p1); eventList.add(p2);
         Event test1 = null; Event test2 = null; Event test3 = null;
-        Connection conn = db.openConnection();
-        EventDao eDao = new EventDao(conn);
+        EventDao eDao = new EventDao(db);
         try{
             eDao.addAllEvents(eventList);
             //try to delete two people in the database and one who isn't
             eDao.deleteAllEvents(eventList);
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //the people who were in the database should not be null because changes are rolled back
             Assertions.assertNotNull(eDao.getEvent(p1.getEventID()));
             Assertions.assertNotNull(eDao.getEvent(p2.getEventID()));
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -348,8 +323,7 @@ class EventDaoTest {
 
     @Test
     void getEventsOfPass() throws DataAccessException {
-        Connection conn = db.openConnection();
-        EventDao eDao = new EventDao(conn);
+        EventDao eDao = new EventDao(db);
         Event p1 = new Event("Biking_123A", "Gale", "Gale123A",
                 10.3f, 10.3f, "Japan", "Ushiku",
                 "Biking_Around", 2016);
@@ -363,10 +337,8 @@ class EventDaoTest {
             eDao.addEvent(p1);
             eDao.addEvent(p3);
             comparePersons = eDao.getEventsOf(p1.getUsername());
-            db.closeConnection(true);
             Assertions.assertNotNull(comparePersons);
         } catch (DataAccessException e) {
-            db.closeConnection(true);
             System.out.println("Failed :O");
         }
         // This could fail depending on the order in the ArrayList that the persons are returned
@@ -374,8 +346,7 @@ class EventDaoTest {
     }
     @Test
     void getEventsOfFail() throws DataAccessException {
-        Connection conn = db.openConnection();
-        EventDao eDao = new EventDao(conn);
+        EventDao eDao = new EventDao(db);
         Event p1 = new Event("Biking_123A", "David", "Gale123A",
                 10.3f, 10.3f, "Japan", "Ushiku",
                 "Biking_Around", 2016);
@@ -388,9 +359,7 @@ class EventDaoTest {
             Assertions.assertNotNull(comparePersons);
             //try to get someone not in the database
             comparePersons = eDao.getEventsOf("fakeUsername");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(true);
             System.out.println("Failed :O");
         }
         Assertions.assertNull(comparePersons);

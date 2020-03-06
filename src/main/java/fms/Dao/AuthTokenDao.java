@@ -1,5 +1,6 @@
 package fms.Dao;
 
+import fms.Database;
 import fms.Exceptions.DataAccessException;
 import fms.Model.AuthToken;
 
@@ -12,14 +13,15 @@ import java.util.UUID;
 public class AuthTokenDao {
 
 
-    private final Connection conn;
+    //private final Connection conn;
+    private final Database db;
 
 
     /**
      * This is the constructor for AuthTokenDao
-     * @param conn Instances our connection
+     * @param db Instances our connection
      */
-    public AuthTokenDao(Connection conn) {this.conn = conn;}
+    public AuthTokenDao(Database db) {this.db = db;}
 
 
     /**
@@ -27,6 +29,7 @@ public class AuthTokenDao {
      * @param authToken authToken to be added to table
      */
     public void addAuthToken(AuthToken authToken) throws DataAccessException {
+        Connection conn = db.getConnection();
         //We can structure our string to be similar to a sql command, but if we insert question
         //marks we can change them later with help from the statement
         String sql = "INSERT INTO AuthToken (authToken, userName) VALUES(?,?)";
@@ -37,8 +40,9 @@ public class AuthTokenDao {
             stmt.setString(1, authToken.getAuthToken());
             stmt.setString(2, authToken.getUserName());
             stmt.executeUpdate();
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while inserting into the database");
         }
     }
@@ -47,11 +51,13 @@ public class AuthTokenDao {
      * Clear out all data from the AuthToken table in the database
      */
     public void clear() throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "DELETE FROM AuthToken";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while clearing AuthToken in the database");
         }
     }
@@ -62,6 +68,7 @@ public class AuthTokenDao {
      * @return Return authToken of specified User
      */
     public AuthToken getAuthToken(String userName) throws DataAccessException {
+        Connection conn = db.getConnection();
         AuthToken authToken;
         ResultSet rs = null;
         String sql = "SELECT * FROM AuthToken WHERE userName = ?";
@@ -70,11 +77,12 @@ public class AuthTokenDao {
             rs = stmt.executeQuery();
             if (rs.next()) {
                 authToken = new AuthToken(rs.getString("authToken"), rs.getString("userName"));
-                stmt.close();
+                db.closeConnection(true);
                 return authToken;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while finding authToken");
         } finally {
             if(rs != null) {
@@ -86,6 +94,7 @@ public class AuthTokenDao {
             }
 
         }
+        db.closeConnection(false);
         return null;
     }
 
@@ -94,11 +103,13 @@ public class AuthTokenDao {
      * @param authToken specifier for which authToken of the User since multiple sessions are possible
      */
     public void deleteAuthToken(String authToken) throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "DELETE FROM AuthToken WHERE authToken = "+authToken;
         try (Statement stmt = conn.prepareStatement(sql)) {
             stmt.executeUpdate(sql);
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while deleting authToken");
         }
     }
@@ -117,6 +128,7 @@ public class AuthTokenDao {
      * @return Returns username of provided authToken
      */
     public String getUserName(String authTokenIn) throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "SELECT * FROM AuthToken";
         String result = null;
         try (Statement stmt = conn.createStatement()) {
@@ -130,8 +142,9 @@ public class AuthTokenDao {
                     result = userName;
                 }
             }
-            stmt.close();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while getting username from the database");
         }
         return result;

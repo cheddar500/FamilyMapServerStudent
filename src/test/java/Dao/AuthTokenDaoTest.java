@@ -43,7 +43,7 @@ class AuthTokenDaoTest {
         try {
             //Let's get our connection and make a new DAO
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             atDao.addAuthToken(bestAuthToken);
             test = atDao.getUserName(bestAuthToken.getAuthToken());
             db.closeConnection(true);
@@ -65,7 +65,7 @@ class AuthTokenDaoTest {
         try {
             //Let's get our connection and make a new DAO
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             //While addAuthToken returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             atDao.addAuthToken(bestAuthToken);
@@ -95,7 +95,7 @@ class AuthTokenDaoTest {
         boolean didItWork = true;
         try {
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             //if we call the method the first time it will addAuthToken it successfully
             atDao.addAuthToken(bestAuthToken);
             //but our sql table is set up so that "userName" must be unique. So trying to addAuthToken it
@@ -118,7 +118,7 @@ class AuthTokenDaoTest {
         AuthToken compareTest = bestAuthToken;
         try {
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             //and then get something back from our find. If the event is not in the database we
             //should have just changed our compareTest to a null object
             compareTest = atDao.getAuthToken(bestAuthToken.getUserName());
@@ -141,7 +141,7 @@ class AuthTokenDaoTest {
         try {
             //Let's get our connection and make a new DAO
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             //While addAuthToken(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             atDao.addAuthToken(bestAuthToken);
@@ -164,7 +164,7 @@ class AuthTokenDaoTest {
         try {
             //Let's get our connection and make a new DAO
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             //While addAuthToken(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             atDao.addAuthToken(bestAuthToken);
@@ -186,7 +186,7 @@ class AuthTokenDaoTest {
         try {
             //Let's get our connection and make a new DAO
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             //While addAuthToken(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             atDao.addAuthToken(bestAuthToken);
@@ -207,7 +207,7 @@ class AuthTokenDaoTest {
         String auth2 = null;
         try {
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             auth1 = atDao.generateAuthToken();
             auth2 = atDao.generateAuthToken();
             db.closeConnection(false);
@@ -224,7 +224,7 @@ class AuthTokenDaoTest {
         String resultUserName = null;
         try {
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             atDao.addAuthToken(bestAuthToken);
             resultUserName = atDao.getUserName(bestAuthToken.getAuthToken());
             db.closeConnection(false);
@@ -239,7 +239,7 @@ class AuthTokenDaoTest {
         String resultUserName = null;
         try {
             Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
+            AuthTokenDao atDao = new AuthTokenDao(db);
             atDao.addAuthToken(bestAuthToken);
             resultUserName = atDao.getUserName("FakeAuthToken");
             db.closeConnection(false);
@@ -256,7 +256,7 @@ class AuthTokenDaoTest {
         AuthToken testAuthToken = null;
         try{
             Connection conn = db.openConnection();
-            atDao = new AuthTokenDao(conn);
+            atDao = new AuthTokenDao(db);
             atDao.addAuthToken(bestAuthToken);
             atDao.deleteAuthToken(bestAuthToken.getAuthToken());
             testAuthToken = atDao.getAuthToken(bestAuthToken.getUserName());
@@ -271,7 +271,7 @@ class AuthTokenDaoTest {
         AuthTokenDao atDao;
         AuthToken testAuthToken = bestAuthToken;
         Connection conn = db.openConnection();
-        atDao = new AuthTokenDao(conn);
+        atDao = new AuthTokenDao(db);
         try{
             Assertions.assertNotNull(testAuthToken);
             atDao.addAuthToken(bestAuthToken);

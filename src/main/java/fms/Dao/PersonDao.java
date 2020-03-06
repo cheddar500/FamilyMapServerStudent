@@ -1,5 +1,6 @@
 package fms.Dao;
 
+import fms.Database;
 import fms.Exceptions.DataAccessException;
 import fms.Model.Person;
 
@@ -15,14 +16,14 @@ import java.util.List;
 public class PersonDao {
 
 
-    private final Connection conn;
+    private final Database db;
 
 
     /**
      * This is the constructor for PersonDao
-     * @param conn Instances our connection
+     * @param db Instances our connection
      */
-    public PersonDao(Connection conn) {this.conn = conn;}
+    public PersonDao(Database db) {this.db = db;}
 
 
     /**
@@ -30,8 +31,8 @@ public class PersonDao {
      * @param personList List of Persons to be added
      */
     public void addAllPersons(List<Person> personList) throws DataAccessException {
-        for (int i = 0; i < personList.size(); i++) {
-            addPerson(personList.get(i));
+        for (Person person : personList) {
+            addPerson(person);
         }
     }
 
@@ -40,6 +41,7 @@ public class PersonDao {
      * @param person Person to be added
      */
     public void addPerson(Person person) throws DataAccessException {
+        Connection conn = db.getConnection();
         //We can structure our string to be similar to a sql command, but if we insert question
         //marks we can change them later with help from the statement
         String sql = "INSERT INTO Person (personID, associatedUsername, firstName, lastName, gender, " +
@@ -58,8 +60,9 @@ public class PersonDao {
             stmt.setString(8, person.getSpouseID());
 
             stmt.executeUpdate();
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while inserting person into the database");
         }
     }
@@ -68,11 +71,13 @@ public class PersonDao {
      * Clear out all data from the Person table in the database
      */
     public void clear() throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "DELETE FROM Person";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while clearing person in the database");
         }
     }
@@ -82,8 +87,8 @@ public class PersonDao {
      * @param personList List of Persons to be deleted
      */
     public void deleteAllPersons(List<Person> personList) throws DataAccessException {
-        for (int i = 0; i < personList.size(); i++) {
-            deletePerson(personList.get(i).getPersonID());
+        for (Person person : personList) {
+            deletePerson(person.getPersonID());
         }
     }
 
@@ -93,12 +98,14 @@ public class PersonDao {
      * @param personID  Person to be deleted
      */
     public void deletePerson(String personID ) throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "DELETE FROM Person WHERE personID = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, personID );
             stmt.executeUpdate();
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while deleting person");
         }
     }
@@ -124,6 +131,7 @@ public class PersonDao {
      * @return Person from the database
      */
     public Person getPerson(String personID) throws DataAccessException {
+        Connection conn = db.getConnection();
         Person person;
         ResultSet rs = null;
         String sql = "SELECT * FROM Person WHERE personID = ?";
@@ -134,10 +142,12 @@ public class PersonDao {
                 person = new Person(rs.getString("personID"), rs.getString("associatedUsername"),
                         rs.getString("firstName"), rs.getString("lastName"), rs.getString("gender"),
                         rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID"));
+                db.closeConnection(true);
                 return person;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while finding person");
         } finally {
             if(rs != null) {
@@ -149,6 +159,7 @@ public class PersonDao {
             }
 
         }
+        db.closeConnection(false);
         return null;
     }
 
@@ -158,6 +169,7 @@ public class PersonDao {
      * @return An ArrayList of Person objects
      */
     public ArrayList<Person> getPersonsOf(String username) throws DataAccessException {
+        Connection conn = db.getConnection();
         ArrayList<Person> persons = null;
         ResultSet rs = null;
         String sql = "SELECT * FROM Person WHERE associatedUsername = ?";
@@ -170,11 +182,11 @@ public class PersonDao {
                         rs.getString("firstName"), rs.getString("lastName"), rs.getString("gender"),
                         rs.getString("fatherID"), rs.getString("motherID"), rs.getString("spouseID")));
             }
-            conn.commit();
-            stmt.close();
+            db.closeConnection(true);
             return persons;
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while finding persons of person");
         } finally {
             if(rs != null) {

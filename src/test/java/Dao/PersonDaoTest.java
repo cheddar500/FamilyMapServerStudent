@@ -47,16 +47,14 @@ class PersonDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             //While addPerson returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             pDao.addPerson(bestPerson);
             //So lets use a find method to get the event that we just put in back out
             compareTest = pDao.getPerson(bestPerson.getPersonID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         //First lets see if our find found anything at all. If it did then we know that if nothing
         //else something was put into our database, since we cleared it in the beginning
@@ -75,18 +73,15 @@ class PersonDaoTest {
         // so we are doing it another way.
         boolean didItWork = true;
         try {
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             //if we call the method the first time it will addPerson it successfully
             pDao.addPerson(bestPerson);
             //but our sql table is set up so that "eventID" must be unique. So trying to addPerson it
             //again will cause the method to throw an exception
             pDao.addPerson(bestPerson);
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //If we catch an exception we will end up in here, where we can change our boolean to
             //false to show that our function failed to perform correctly
-            db.closeConnection(false);
             didItWork = false;
         }
         //Check to make sure that we did in fact enter our catch statement
@@ -98,14 +93,12 @@ class PersonDaoTest {
         //Set our compareTest to an actual event
         Person compareTest = bestPerson;
         try {
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             //and then get something back from our find. If the event is not in the database we
             //should have just changed our compareTest to a null object
             compareTest = pDao.getPerson(bestPerson.getPersonID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
 
         //Now make sure that compareTest is indeed null
@@ -121,16 +114,14 @@ class PersonDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             //While addPerson(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             pDao.addPerson(bestPerson);
             pDao.clear();
             compareTest = pDao.getPerson(bestPerson.getPersonID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(compareTest);
     }
@@ -144,15 +135,13 @@ class PersonDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             //While addPerson(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             pDao.addPerson(bestPerson);
             compareTest = pDao.getPerson(bestPerson.getPersonID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNotNull(compareTest);
     }
@@ -165,16 +154,14 @@ class PersonDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             //While addPerson(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             pDao.addPerson(bestPerson);
             String fakePersonID = "imafakeid";
             compareTest = pDao.getPerson(fakePersonID);
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(compareTest);
     }
@@ -188,15 +175,13 @@ class PersonDaoTest {
         personList.add(p1); personList.add(p2); personList.add(p3);
         Person test1 = null; Person test2 = null; Person test3 = null;
         try{
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             pDao.addAllPersons(personList);
             test1 = pDao.getPerson("id1");
             test2 = pDao.getPerson("id2");
             test3 = pDao.getPerson("id3");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertEquals(p1, test1);
         Assertions.assertEquals(p2, test2);
@@ -212,21 +197,18 @@ class PersonDaoTest {
         personList.add(p1); personList.add(p2); personList.add(p3);
         Person test1 = null; Person test2 = null; Person test3 = null;
         try{
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             pDao.addPerson(p1); pDao.addPerson(p2); pDao.addPerson(p3);
             //Now trying to add all duplicates
             pDao.addAllPersons(personList);
             test1 = pDao.getPerson(personList.get(0).getPersonID());
             test2 = pDao.getPerson(personList.get(1).getPersonID());
             test3 = pDao.getPerson(personList.get(2).getPersonID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //All adding should have failed due to duplication
             Assertions.assertNull(test1);
             Assertions.assertNull(test2);
             Assertions.assertNull(test3);
-            db.closeConnection(false);
         }
     }
 
@@ -235,14 +217,12 @@ class PersonDaoTest {
         PersonDao pDao;
         Person testMan = null;
         try{
-            Connection conn = db.openConnection();
-            pDao = new PersonDao(conn);
+            pDao = new PersonDao(db);
             pDao.addPerson(bestPerson);
             pDao.deletePerson(bestPerson.getPersonID());
             testMan = pDao.getPerson(bestPerson.getPersonID());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(testMan);
     }
@@ -250,18 +230,15 @@ class PersonDaoTest {
     void deletePersonFail() throws DataAccessException {
         PersonDao pDao;
         Person testMan = bestPerson;
-        Connection conn = db.openConnection();
-        pDao = new PersonDao(conn);
+        pDao = new PersonDao(db);
         try{
             Assertions.assertNotNull(testMan);
             pDao.addPerson(bestPerson);
             //deleting a person that doesn't exist will throw an error we can catch
             pDao.deletePerson("fakeID");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //The original person we added should still be there
             testMan = pDao.getPerson(bestPerson.getPersonID());
-            db.closeConnection(false);
         }
         Assertions.assertNotNull(testMan);
     }
@@ -275,16 +252,14 @@ class PersonDaoTest {
         personList.add(p1); personList.add(p2); personList.add(p3);
         Person test1 = null; Person test2 = null; Person test3 = null;
         try{
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
+            PersonDao pDao = new PersonDao(db);
             pDao.addAllPersons(personList);
             pDao.deleteAllPersons(personList);
             test1 = pDao.getPerson("id1");
             test2 = pDao.getPerson("id2");
             test3 = pDao.getPerson("id3");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(test1);
         Assertions.assertNull(test2);
@@ -299,26 +274,22 @@ class PersonDaoTest {
         //only add two of the test people
         personList.add(p1); personList.add(p2);
         Person test1 = null; Person test2 = null; Person test3 = null;
-        Connection conn = db.openConnection();
-        PersonDao pDao = new PersonDao(conn);
+        PersonDao pDao = new PersonDao(db);
         try{
             pDao.addAllPersons(personList);
             //try to delete two people in the database and one who isn't
             pDao.deleteAllPersons(personList);
-            db.closeConnection(true);
         } catch (DataAccessException e) {
             //the people who were in the database should not be null because changes are rolled back
             Assertions.assertNotNull(pDao.getPerson(p1.getPersonID()));
             Assertions.assertNotNull(pDao.getPerson(p2.getPersonID()));
-            db.closeConnection(false);
         }
     }
 
 
     @Test
     void getPersonsOfPass() throws DataAccessException {
-        Connection conn = db.openConnection();
-        PersonDao pDao = new PersonDao(conn);
+        PersonDao pDao = new PersonDao(db);
         Person p1 = new Person("id1","un1","bob","marley","m","","","");
         Person p2 = new Person("id2","un2","bobby","fish","m","dean bill","lucy hi","");
         Person p3 = new Person("id3","un1","bird","flappy","m","doug","lindsey","mary");
@@ -329,10 +300,8 @@ class PersonDaoTest {
             pDao.addPerson(p1);
             pDao.addPerson(p3);
             comparePersons = pDao.getPersonsOf(p1.getUsername());
-            db.closeConnection(true);
             Assertions.assertNotNull(comparePersons);
         } catch (DataAccessException e) {
-            db.closeConnection(true);
             System.out.println("Failed :O");
         }
         // This could fail depending on the order in the ArrayList that the persons are returned
@@ -340,8 +309,7 @@ class PersonDaoTest {
     }
     @Test
     void getPersonsOfFail() throws DataAccessException {
-        Connection conn = db.openConnection();
-        PersonDao pDao = new PersonDao(conn);
+        PersonDao pDao = new PersonDao(db);
         Person p1 = new Person("id1","un1","bob","marley","m","","","");
         Person p3 = new Person("id3","un1","bird","flappy","m","doug","lindsey","mary");
         ArrayList<Person> comparePersons = new ArrayList<>();
@@ -350,9 +318,7 @@ class PersonDaoTest {
             Assertions.assertNotNull(comparePersons);
             //try to get someone not in the database
             comparePersons = pDao.getPersonsOf("fakeUsername");
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(true);
             System.out.println("Failed :O");
         }
         Assertions.assertNull(comparePersons);

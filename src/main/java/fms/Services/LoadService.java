@@ -36,16 +36,15 @@ public class LoadService {
     public LoadResponse load(LoadRequest request) throws DataAccessException {
         //Database connection
         Database db = new Database();
-        Connection conn = db.openConnection();
         //Dao objects
-        UserDao uDao = new UserDao(conn);
-        EventDao eDao = new EventDao(conn);
-        PersonDao pDao = new PersonDao(conn);
+        UserDao uDao = new UserDao(db);
+        EventDao eDao = new EventDao(db);
+        PersonDao pDao = new PersonDao(db);
         //Clear out everything
         uDao.clear();
         eDao.clear();
         pDao.clear();
-        new AuthTokenDao(conn).clear();
+        new AuthTokenDao(db).clear();
         ArrayList<User> users = request.getUsers();
         ArrayList<Event> events = request.getEvents();
         ArrayList<Person> people = request.getPersons();
@@ -58,7 +57,6 @@ public class LoadService {
         int numOfPersons = people.size();
         int numOfEvents = events.size();
         String message = "Successfully added "+numberOfUsers+" users, "+numOfPersons+" persons, and "+numOfEvents+" events to the database.";
-        db.closeConnection(true);
         return new LoadResponse(message, true);
     }
 }

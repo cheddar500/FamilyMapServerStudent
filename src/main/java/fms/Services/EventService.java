@@ -42,19 +42,17 @@ public class EventService {
      */
     public EventResponse getEvent(EventRequest request) throws DataAccessException{
         Database db = new Database();
-        Connection conn = db.openConnection();
         //use authToken get username, if null invalid
-        AuthTokenDao atDao = new AuthTokenDao(conn);
+        AuthTokenDao atDao = new AuthTokenDao(db);
         String authToken = request.getAuthToken();
         String userName = atDao.getUserName(authToken);
         if(userName == null){
-            db.closeConnection(true);
             String message = "Error: username is null";
             return new EventResponse(message, false);
         }
 
         //get all family members or single
-        EventDao eDao = new EventDao(conn);
+        EventDao eDao = new EventDao(db);
         //if only requested to get one person
         if(!request.getGetAll()){
             Event result = new Event();
@@ -78,7 +76,6 @@ public class EventService {
         //two returns:
         // user has no persons --> null
         if (eventList.size() == 0) {
-            db.closeConnection(true);
             String message = "Error: user has no Event objects, null";
             return new EventResponse(message, false);
         }
@@ -94,18 +91,14 @@ public class EventService {
                 Event tempPerson = eDao.getEvent(eventID);
                 usernameFromID = tempPerson.getUsername();
                 if (!userName.equals(usernameFromID)) {
-                    db.closeConnection(true);
                     String message = "Error: authToken and eventID don't match, invalid privileges";
                     return new EventResponse(message, false);
                 }
             } catch (Exception e) {
-                db.closeConnection(true);
                 String message = "Error: Failed to get all Event objects";
                 return new EventResponse(message, false);
             }
         }
-
-        db.closeConnection(true);
         return new EventResponse(eventList, true);
     }
 }

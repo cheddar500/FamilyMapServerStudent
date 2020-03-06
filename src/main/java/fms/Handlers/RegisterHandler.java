@@ -42,16 +42,19 @@ public class RegisterHandler implements HttpHandler {
                 inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
                 RegisterResponse resp = new RegisterResponse("Error: user already exists", false);
                 inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
+                System.out.println(resp.toString());
             } else {
                 //send that it was ok
                 inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
                 //give me where I need to write what happened -> write the response we got
                 inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
+                System.out.println(response.toString());
             }
         }catch(DataAccessException e){
             inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             RegisterResponse resp = new RegisterResponse(e.getMessage(), false);
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
+            System.out.println(resp.toString());
             e.printStackTrace();
         }
         inputExchange.close();

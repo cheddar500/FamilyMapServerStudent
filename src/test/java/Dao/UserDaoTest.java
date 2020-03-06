@@ -32,7 +32,6 @@ class UserDaoTest {
         //lets clear the tables so that any data we entered for testing doesn't linger in our files
         db.openConnection();
         db.clearTables();
-        db.closeConnection(true);
     }
 
     @Test
@@ -44,16 +43,14 @@ class UserDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             //While addUser returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             uDao.addUser(bestUser);
             //So lets use a find method to get the event that we just put in back out
             compareTest = uDao.getUser(bestUser.getUserName());
-            db.closeConnection(true);
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         //First lets see if our find found anything at all. If it did then we know that if nothing
         //else something was put into our database, since we cleared it in the beginning
@@ -72,18 +69,15 @@ class UserDaoTest {
         // so we are doing it another way.
         boolean didItWork = true;
         try {
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             //if we call the method the first time it will addUser it successfully
             uDao.addUser(bestUser);
             //but our sql table is set up so that "eventID" must be unique. So trying to addUser it
             //again will cause the method to throw an exception
-            uDao.addUser(bestUser);
-            db.closeConnection(true);
-        } catch (DataAccessException e) {
+            uDao.addUser(bestUser);        } catch (DataAccessException e) {
             //If we catch an exception we will end up in here, where we can change our boolean to
             //false to show that our function failed to perform correctly
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
             didItWork = false;
         }
         //Check to make sure that we did in fact enter our catch statement
@@ -95,14 +89,11 @@ class UserDaoTest {
         //Set our compareTest to an actual event
         User compareTest = bestUser;
         try {
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             //and then get something back from our find. If the event is not in the database we
             //should have just changed our compareTest to a null object
-            compareTest = uDao.getUser(bestUser.getPersonID());
-            db.closeConnection(true);
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
+            compareTest = uDao.getUser(bestUser.getPersonID());        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
         }
 
         //Now make sure that compareTest is indeed null
@@ -118,16 +109,13 @@ class UserDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             //While addUser(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             uDao.addUser(bestUser);
             uDao.clear();
-            compareTest = uDao.getUser(bestUser.getPersonID());
-            db.closeConnection(true);
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
+            compareTest = uDao.getUser(bestUser.getPersonID());        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(compareTest);
     }
@@ -141,15 +129,12 @@ class UserDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             //While addUser(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             uDao.addUser(bestUser);
-            compareTest = uDao.getUser(bestUser.getUserName());
-            db.closeConnection(true);
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
+            compareTest = uDao.getUser(bestUser.getUserName());        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
         }
         Assertions.assertNotNull(compareTest);
     }
@@ -162,16 +147,13 @@ class UserDaoTest {
 
         try {
             //Let's get our connection and make a new DAO
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             //While addUser(); returns a bool we can't use that to verify that our function actually worked
             //only that it ran without causing an error
             uDao.addUser(bestUser);
             String fakePersonID = "imafakeid";
-            compareTest = uDao.getUser(fakePersonID);
-            db.closeConnection(true);
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
+            compareTest = uDao.getUser(fakePersonID);        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(compareTest);
     }
@@ -180,14 +162,11 @@ class UserDaoTest {
     void loginPass() throws DataAccessException {
         User loggedIn = null;
         try{
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             uDao.addUser(bestUser);
             loggedIn = uDao.login(bestUser.getUserName(), bestUser.getPassword());
-            db.closeConnection(true);
-
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNotNull(loggedIn);
         Assertions.assertEquals(bestUser, loggedIn);
@@ -197,14 +176,11 @@ class UserDaoTest {
     void loginFail() throws DataAccessException {
         User loggedIn = null;
         try{
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
+            UserDao uDao = new UserDao(db);
             uDao.addUser(bestUser);
             loggedIn = uDao.login(bestUser.getUserName(), "f@keP@ssword");
-            db.closeConnection(true);
-
         } catch (DataAccessException e) {
-            db.closeConnection(false);
+            System.out.println(e.getMessage());
         }
         Assertions.assertNull(loggedIn);
     }

@@ -29,25 +29,22 @@ public class LoginService {
      */
     public LoginResponse login(LoginRequest request) throws DataAccessException {
         Database db = new Database();
-        Connection conn = db.openConnection();
-        UserDao uDao = new UserDao(conn);
+        UserDao uDao = new UserDao(db);
         User user = uDao.login(request.getUserName(), request.getPassword());
         //check validity of login
         if(user == null || request.getUserName() == null || request.getPassword() == null){
-            db.closeConnection(true);
             return new LoginResponse("User/Password combo doesn't exist", false);
         }
         //login seems valid, try to get authToken
-        AuthTokenDao atDao = new AuthTokenDao(conn);
+        AuthTokenDao atDao = new AuthTokenDao(db);
         AuthToken authTokenClass = atDao.getAuthToken(request.getUserName());
         //check if username doesn't have an authToken
         if(authTokenClass == null){
-            String newAuthToken = new AuthTokenDao(conn).generateAuthToken();
+            String newAuthToken = atDao.generateAuthToken();
             atDao.addAuthToken(new AuthToken(newAuthToken, request.getUserName()));
             authTokenClass = atDao.getAuthToken(request.getUserName());
         }
         String message = "Successfully logged in";
-        db.closeConnection(true);
         return new LoginResponse(authTokenClass.getAuthToken(), message, user.getPersonID(), true, authTokenClass.getUserName());
     }
 }

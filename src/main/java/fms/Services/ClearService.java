@@ -27,13 +27,11 @@ public class ClearService {
      */
     public ClearResponse clear() throws DataAccessException {
         Database db = new Database();
-        Connection conn = db.openConnection();
-        new AuthTokenDao(conn).clear();
-        new EventDao(conn).clear();
-        new PersonDao(conn).clear();
-        new UserDao(conn).clear();
+        new AuthTokenDao(db).clear();
+        new EventDao(db).clear();
+        new PersonDao(db).clear();
+        new UserDao(db).clear();
         String message = "Clear succeeded";
-        db.closeConnection(true);
         return new ClearResponse(message, true);
     }
 }

@@ -14,14 +14,14 @@ import java.sql.*;
 public class UserDao {
 
 
-    private final Connection conn;
+    private final Database db;
 
     /**
      * This is the constructor for UserDao
-     * @param conn Instances our connection
+     * @param db Instances our connection
      */
-    public UserDao(Connection conn) {
-        this.conn = conn;
+    public UserDao(Database db) {
+        this.db = db;
     }
 
     /**
@@ -29,6 +29,7 @@ public class UserDao {
      * @param user User object to be added to the table
      */
     public void addUser(User user) throws DataAccessException {
+        Connection conn = db.getConnection();
 //We can structure our string to be similar to a sql command, but if we insert question
         //marks we can change them later with help from the statement
         String sql = "INSERT INTO User (userName, password, email, firstName, lastName, " +
@@ -46,8 +47,9 @@ public class UserDao {
             stmt.setString(7, user.getPersonID());
 
             stmt.executeUpdate();
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while inserting user into the database");
         }
     }
@@ -56,11 +58,13 @@ public class UserDao {
      * Clear out all data from the User table in the database
      */
     public void clear() throws DataAccessException {
+        Connection conn = db.getConnection();
         String sql = "DELETE FROM User";
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
-            conn.commit();
+            db.closeConnection(true);
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while clearing User in the database");
         }
     }
@@ -71,6 +75,7 @@ public class UserDao {
      * @return User object with relevant data from table
      */
     public User getUser(String userName) throws DataAccessException {
+        Connection conn = db.getConnection();
         User user;
         ResultSet rs = null;
         String sql = "SELECT * FROM User WHERE userName = ?";
@@ -81,10 +86,12 @@ public class UserDao {
                 user = new User(rs.getString("userName"), rs.getString("password"),
                         rs.getString("email"), rs.getString("firstName"), rs.getString("lastName"),
                         rs.getString("gender"), rs.getString("personID"));
+                db.closeConnection(true);
                 return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while finding user");
         } finally {
             if(rs != null) {
@@ -96,6 +103,7 @@ public class UserDao {
             }
 
         }
+        db.closeConnection(false);
         return null;
     }
 
@@ -106,7 +114,8 @@ public class UserDao {
      * @param passwordIn User's associated password in table
      * @return User from table
      */
-    public User login(String userNameIn, String passwordIn) throws DataAccessException{
+    public User login(String userNameIn, String passwordIn) throws DataAccessException {
+        Connection conn = db.getConnection();
         User result = new User();
         //validate password, throw error if doesn't match
         String realPassword = null;
@@ -129,7 +138,7 @@ public class UserDao {
             }
             //throw an error if invalid password, include word "error" and 400 number
             if(!validPassword){
-
+                db.closeConnection(false);
                 throw new DataAccessException("Error 400 number : invalid password");
                 //return null;
             }
@@ -140,13 +149,13 @@ public class UserDao {
             //add userName and authToken to AuthToken table
 //            AuthToken at = new AuthToken(newAuthToken, userNameIn);
 //            atDao.addAuthToken(at);
-            stmt.close();
+            db.closeConnection(true);
             //get user from User table and return them
             return result;
 
         } catch (SQLException e) {
+            db.closeConnection(false);
             throw new DataAccessException("Error encountered while logging user into the database");
         }
     }
-
 }

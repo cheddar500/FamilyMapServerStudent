@@ -39,13 +39,11 @@ public class FillService {
      */
     public FillResponse fill(FillRequest request) throws DataAccessException, IOException, SQLException {
         Database db = new Database();
-        Connection conn = db.openConnection();
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //generations default 4, must be non-negative
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if(request.getNumOfGenerations() == null){
-            db.closeConnection(true);
             String message = "Error: invalid number of generations, must be non-negative";
             return new FillResponse(message, false);
         }
@@ -54,10 +52,9 @@ public class FillService {
         //The required "username" parameter must be a user already registered with the server
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         String userName = request.getUserName();
-        UserDao uDao = new UserDao(conn);
+        UserDao uDao = new UserDao(db);
         User user = uDao.getUser(userName);
         if(user == null){
-            db.closeConnection(true);
             String message = "Error: invalid userName";
             return new FillResponse(message, false);
         }
@@ -68,9 +65,9 @@ public class FillService {
         //?????????check if null for data as well and throw error or always fine since already registered????***************************?????????????????
         //before we delete, I need to save the users Person object
         String personID =  user.getPersonID();
-        PersonDao pDao = new PersonDao(conn);
+        PersonDao pDao = new PersonDao(db);
         Person userPerson = pDao.getPerson(personID);
-        deleteUserData(conn, userName);
+        deleteUserData(db, userName);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////Generate data//////////////////////////////////////////////////////
@@ -83,7 +80,7 @@ public class FillService {
         // Based on the requested number of generations, you should fill out the user’s family tree with generated Person and Event data.
 //        addGeneratedFamilyToTree(conn, request, user);
         Generate getData = new Generate();
-        getData.generateInfo(userPerson, request.getNumOfGenerations(), conn);
+        getData.generateInfo(userPerson, request.getNumOfGenerations(), db);
 
         /////////////////////////////////////////////
         //Close connection, return response
@@ -94,7 +91,6 @@ public class FillService {
             numberOfPersons += Math.pow(2,i);
         }
         numOfEvents += (numberOfPersons-1)*3;
-        db.closeConnection(true);
         String message = "Successfully added "+numberOfPersons+" persons and "+numOfEvents+" events to the database.";
         return new FillResponse(message, true);
     }
@@ -103,15 +99,15 @@ public class FillService {
 
     /**
      * Deletes existing user data
-     * @param conn the connection to the database
+     * @param db the connection to the database
      * @param userName the users username
      * @throws DataAccessException
      */
-    private void deleteUserData(Connection conn, String userName) throws DataAccessException {
+    private void deleteUserData(Database db, String userName) throws DataAccessException {
         ArrayList<Person> associatedPeople;
         ArrayList<Event> associatedEvents;
-        PersonDao pDao = new PersonDao(conn);
-        EventDao eDao = new EventDao(conn);
+        PersonDao pDao = new PersonDao(db);
+        EventDao eDao = new EventDao(db);
         associatedPeople = pDao.getPersonsOf(userName);
         associatedEvents = eDao.getEventsOf(userName);
         pDao.deleteAllPersons(associatedPeople);
