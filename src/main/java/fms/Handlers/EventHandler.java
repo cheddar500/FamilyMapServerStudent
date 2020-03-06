@@ -49,8 +49,9 @@ public class EventHandler implements HttpHandler {
                 if (reqHeaders.containsKey("Authorization")) {
                     String authToken = reqHeaders.getFirst("Authorization");
                     //verify token?
-                    String personID = getOneEvent(inputExchange.getRequestURI().toString());
-                    EventRequest request = new EventRequest(authToken, personID, (personID == null));
+//                    String Person = getOneEvent(inputExchange.getRequestURI().toString());
+                    String eventID = getOneEvent(inputExchange.getRequestURI().toString());
+                    EventRequest request = new EventRequest(authToken, eventID, (eventID == null));
                     EventResponse response = new EventService().getEvent(request);
                     if(!response.getSuccess()){//clear test response is null here
                         inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);

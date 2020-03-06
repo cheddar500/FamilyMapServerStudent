@@ -86,18 +86,6 @@ public class EventDao {
         }
     }
 
-//    /**
-//     * Delete an Event passed in
-//     * @param eventID Event to be deleted
-//     */
-//    public void deleteEvent(String eventID) throws DataAccessException {
-//        String sql = "DELETE FROM Event WHERE eventID = "+eventID;
-//        try (Statement stmt = conn.prepareStatement(sql)) {
-//            stmt.executeUpdate(sql);
-//        } catch (SQLException e) {
-//            throw new DataAccessException("Error encountered while deleting event");
-//        }
-//    }
 
     /**
      * Delete an Event passed in
@@ -164,7 +152,7 @@ public class EventDao {
             while(rs.next()) {
                 if(events == null) events = new ArrayList<>();
                 events.add(new Event(rs.getString("eventID"), rs.getString("associatedUsername"),
-                        rs.getString("personID"), rs.getDouble("latitude"), rs.getDouble("longitude"),
+                        rs.getString("personID"), rs.getFloat("latitude"), rs.getFloat("longitude"),
                         rs.getString("country"), rs.getString("city"), rs.getString("eventType"),
                         rs.getInt("year")));
             }

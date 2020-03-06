@@ -33,11 +33,11 @@ public class EventResponse implements IResponse{
     /**
      * Latitude: Latitude of event’s location
      */
-    private double latitude;
+    private float latitude;
     /**
      * Longitude: Longitude of event’s location
      */
-    private double longitude;
+    private float longitude;
     /**
      * Person ID: ID of person to which this event belongs
      */
@@ -78,7 +78,7 @@ public class EventResponse implements IResponse{
      * @param year Year in which event occurred
      * @param success Tells if request was successful or not
      */
-    public EventResponse(String associatedUsername, String eventID, String personID, double latitude, double longitude, String country,String city, String eventType, int year, Boolean success) {
+    public EventResponse(String associatedUsername, String eventID, String personID, float latitude, float longitude, String country,String city, String eventType, int year, Boolean success) {
         this.eventType = eventType;
         this.city = city;
         this.country = country;
@@ -168,7 +168,7 @@ public class EventResponse implements IResponse{
         this.eventType = eventType;
     }
 
-    public double getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
@@ -176,7 +176,7 @@ public class EventResponse implements IResponse{
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 

@@ -29,17 +29,24 @@ public class Generate {
         PersonDao pDao = new PersonDao(conn);
         EventDao eDao = new EventDao(conn);
         //Add at least the original user
-        pDao.addPerson(userPerson);
+        ArrayList<Event> events = new ArrayList<>();
+        ArrayList<Person> persons = new ArrayList<>();
+        persons.add(userPerson);
+//        pDao.addPerson(userPerson);
         //Original user has to have at least a birth
         final int CURRENT_YEAR = 2020;
         int year = CURRENT_YEAR - 25;
-        eDao.addEvent(generateEvent(userPerson.getUsername(),userPerson.getPersonID(),getRandomLocation(),
+        events.add(generateEvent(userPerson.getUsername(),userPerson.getPersonID(),getRandomLocation(),
                 "birth",year));
+//        eDao.addEvent(generateEvent(userPerson.getUsername(),userPerson.getPersonID(),getRandomLocation(),
+//                "birth",year));
         //Add additional generations as requested recursively
-        recurse(userPerson, generation, pDao, eDao);
+        recurse(userPerson, generation, pDao, eDao, events, persons);
+        pDao.addAllPersons(persons);
+        eDao.addAllEvents(events);
     }
 
-    private void recurse(Person child, int generation, PersonDao pDao, EventDao eDao) throws DataAccessException, IOException {
+    private void recurse(Person child, int generation, PersonDao pDao, EventDao eDao, ArrayList<Event> events, ArrayList<Person> persons) throws DataAccessException, IOException {
         //base case
         if(generation == 0) { return; }
         //Father Data
@@ -61,29 +68,43 @@ public class Generate {
         //Generate and link father of person
         Person father = new Person(fatherPersonID, associatedUsername, mFirstName, lastName, "m",
                 fathersFatherID, fathersMotherID, motherPersonID);
-        pDao.addPerson(father);
+//        pDao.addPerson(father);
+        persons.add(father);
         //Generate birth, marriage, death
-        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
+//        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
+//                "birth",year-25));
+        events.add(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
                 "birth",year-25));
-        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), marriageLocation,
+//        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), marriageLocation,
+//                "marriage",year-5));
+        events.add(generateEvent(child.getUsername(), father.getPersonID(), marriageLocation,
                 "marriage",year-5));
-        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
+//        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
+//                "death",year+30));
+        events.add(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
                 "death",year+30));
-        recurse(father, generation-1, pDao, eDao);
+        recurse(father, generation-1, pDao, eDao, events, persons);
 
 
         //Generate and link mother of person
         Person mother = new Person(motherPersonID, associatedUsername, fFirstName, lastName, "f",
                 mothersFatherID, mothersMotherID, fatherPersonID);
-        pDao.addPerson(mother);
+//        pDao.addPerson(mother);
+        persons.add(mother);
         //Generate birth, marriage, death
-        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
+//        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
+//                "birth",year-25));
+        events.add(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
                 "birth",year-25));
-        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), marriageLocation,
+//        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), marriageLocation,
+//                "marriage",year-5));
+        events.add(generateEvent(child.getUsername(), mother.getPersonID(), marriageLocation,
                 "marriage",year-5));
-        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
+//        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
+//                "death",year+30));
+        events.add(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
                 "death",year+30));
-        recurse(mother, generation-1, pDao, eDao);
+        recurse(mother, generation-1, pDao, eDao, events, persons);
     }
 
 
