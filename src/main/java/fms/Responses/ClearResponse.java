@@ -40,7 +40,7 @@ public class ClearResponse implements IResponse {
      */
     @Override
     public String getResponseBody(){
-        return JsonSerializer.serialize(this, ClearResponse.class);
+        return new JsonSerializer().serialize(this, ClearResponse.class);
     }
 
 

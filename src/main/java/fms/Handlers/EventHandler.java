@@ -48,8 +48,6 @@ public class EventHandler implements HttpHandler {
                 // Check to see if an "Authorization" header is present
                 if (reqHeaders.containsKey("Authorization")) {
                     String authToken = reqHeaders.getFirst("Authorization");
-                    //verify token?
-//                    String Person = getOneEvent(inputExchange.getRequestURI().toString());
                     String eventID = getOneEvent(inputExchange.getRequestURI().toString());
                     EventRequest request = new EventRequest(authToken, eventID, (eventID == null));
                     EventResponse response = new EventService().getEvent(request);
@@ -78,7 +76,7 @@ public class EventHandler implements HttpHandler {
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();
         }
-        inputExchange.close();
+        inputExchange.getResponseBody().close();
     }
 
 }

@@ -66,7 +66,7 @@ public class RegisterResponse implements IResponse{
      */
     @Override
     public String getResponseBody(){
-        return JsonSerializer.serialize(this, RegisterResponse.class);
+        return new JsonSerializer().serialize(this, RegisterResponse.class);
     }
 
 

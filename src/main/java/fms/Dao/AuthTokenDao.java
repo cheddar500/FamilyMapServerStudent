@@ -39,6 +39,7 @@ public class AuthTokenDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while inserting into the database");
         }
     }
@@ -52,6 +53,7 @@ public class AuthTokenDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while clearing AuthToken in the database");
         }
     }
@@ -99,6 +101,7 @@ public class AuthTokenDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while deleting authToken");
         }
     }
@@ -132,6 +135,7 @@ public class AuthTokenDao {
             }
             stmt.close();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while getting username from the database");
         }
         return result;

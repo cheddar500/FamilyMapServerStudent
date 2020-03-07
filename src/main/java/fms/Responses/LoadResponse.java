@@ -38,7 +38,7 @@ public class LoadResponse implements IResponse{
      */
     @Override
     public String getResponseBody(){
-        return JsonSerializer.serialize(this, LoadResponse.class);
+        return new JsonSerializer().serialize(this, LoadResponse.class);
     }
 
 

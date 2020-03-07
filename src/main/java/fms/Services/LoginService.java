@@ -31,21 +31,37 @@ public class LoginService {
         Database db = new Database();
         Connection conn = db.openConnection();
         UserDao uDao = new UserDao(conn);
-        User user = uDao.login(request.getUserName(), request.getPassword());
-        //check validity of login
-        if(user == null || request.getUserName() == null || request.getPassword() == null){
+
+        //getUser from username
+        User user = uDao.getUser(request.getUserName());
+
+        //check if password == passed in password
+        if(user != null) {
+            if (!user.getPassword().equals(request.getPassword())) {
+                db.closeConnection(true);
+                return new LoginResponse("invalid password combo doesn't exist", false);
+            }
+            //check validity of login
+            else if (user == null || request.getUserName() == null || request.getPassword() == null) {
+                db.closeConnection(true);
+                return new LoginResponse("User/Password combo doesn't exist", false);
+            }
+        } else {
             db.closeConnection(true);
-            return new LoginResponse("User/Password combo doesn't exist", false);
+            return new LoginResponse("User doesn't exist", false);
         }
+
+
         //login seems valid, try to get authToken
         AuthTokenDao atDao = new AuthTokenDao(conn);
         AuthToken authTokenClass = atDao.getAuthToken(request.getUserName());
         //check if username doesn't have an authToken
-        if(authTokenClass == null){
+//        if(authTokenClass == null){ //commented out b/c supposed to be able to have multiple
+        //logins right?
             String newAuthToken = new AuthTokenDao(conn).generateAuthToken();
             atDao.addAuthToken(new AuthToken(newAuthToken, request.getUserName()));
             authTokenClass = atDao.getAuthToken(request.getUserName());
-        }
+//        }
         String message = "Successfully logged in";
         db.closeConnection(true);
         return new LoginResponse(authTokenClass.getAuthToken(), message, user.getPersonID(), true, authTokenClass.getUserName());

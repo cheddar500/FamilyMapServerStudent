@@ -48,7 +48,6 @@ public class PersonHandler implements HttpHandler {
                 // Check to see if an "Authorization" header is present
                 if (reqHeaders.containsKey("Authorization")) {
                     String authToken = reqHeaders.getFirst("Authorization");
-                    //verify token?
                     String personID = getOnePerson(inputExchange.getRequestURI().toString());
                     PersonRequest request = new PersonRequest(authToken, personID, (personID == null));
                     PersonResponse response = new PersonService().getPerson(request);
@@ -64,6 +63,10 @@ public class PersonHandler implements HttpHandler {
                         //give me where I need to write what happened -> write the response we got
                         inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
                     }
+                } else {
+                    inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    PersonResponse resp = new PersonResponse("Error: invalid authToken", false);
+                    inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
                 }
             }
         } catch(DataAccessException | IOException e){
@@ -73,6 +76,6 @@ public class PersonHandler implements HttpHandler {
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();
         }
-        inputExchange.close();
+        inputExchange.getResponseBody().close();
     }
 }

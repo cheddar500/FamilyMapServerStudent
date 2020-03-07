@@ -175,37 +175,4 @@ class UserDaoTest {
         }
         Assertions.assertNull(compareTest);
     }
-
-    @Test
-    void loginPass() throws DataAccessException {
-        User loggedIn = null;
-        try{
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
-            uDao.addUser(bestUser);
-            loggedIn = uDao.login(bestUser.getUserName(), bestUser.getPassword());
-            db.closeConnection(true);
-
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
-        }
-        Assertions.assertNotNull(loggedIn);
-        Assertions.assertEquals(bestUser, loggedIn);
-    }
-
-    @Test
-    void loginFail() throws DataAccessException {
-        User loggedIn = null;
-        try{
-            Connection conn = db.openConnection();
-            UserDao uDao = new UserDao(conn);
-            uDao.addUser(bestUser);
-            loggedIn = uDao.login(bestUser.getUserName(), "f@keP@ssword");
-            db.closeConnection(true);
-
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
-        }
-        Assertions.assertNull(loggedIn);
-    }
 }

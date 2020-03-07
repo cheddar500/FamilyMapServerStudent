@@ -52,7 +52,7 @@ public class ClearHandler implements HttpHandler {
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();
         }
-        inputExchange.close();
+        inputExchange.getResponseBody().close();
     }
 
 }

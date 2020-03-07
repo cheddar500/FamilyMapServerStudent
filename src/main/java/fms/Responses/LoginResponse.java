@@ -65,7 +65,7 @@ public class LoginResponse implements IResponse {
      */
     @Override
     public String getResponseBody(){
-        return JsonSerializer.serialize(this, LoginResponse.class);
+        return new JsonSerializer().serialize(this, LoginResponse.class);
     }
 
     public String getAuthToken() {

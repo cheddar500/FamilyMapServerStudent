@@ -39,7 +39,7 @@ public class FillResponse implements IResponse {
      */
     @Override
     public String getResponseBody(){
-        return JsonSerializer.serialize(this, FillResponse.class);
+        return new JsonSerializer().serialize(this, FillResponse.class);
     }
 
 
@@ -49,5 +49,9 @@ public class FillResponse implements IResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Boolean getSuccess() {
+        return success;
     }
 }

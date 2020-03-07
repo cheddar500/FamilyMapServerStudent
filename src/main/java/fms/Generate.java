@@ -18,6 +18,14 @@ import java.util.UUID;
 
 public class Generate {
 
+    private EventDao eDao;
+    private int yearTracker;
+    private int generationCounter;
+    private ArrayList<Event> events;
+    private ArrayList<Person> persons;
+    private final int CURRENT_YEAR = 2025;
+
+
     /**
      * Default constructor
      */
@@ -25,28 +33,31 @@ public class Generate {
 
 
 
-    public void generateInfo(Person userPerson, int generation, Connection conn) throws DataAccessException, IOException {
+    public void generateInfo(Person userPerson, int generation) throws DataAccessException, IOException {
+        Database db = new Database();
+        Connection conn = db.openConnection();
         PersonDao pDao = new PersonDao(conn);
-        EventDao eDao = new EventDao(conn);
+        eDao = new EventDao(conn);
         //Add at least the original user
-        ArrayList<Event> events = new ArrayList<>();
-        ArrayList<Person> persons = new ArrayList<>();
+        events = new ArrayList<>();
+        persons = new ArrayList<>();
         persons.add(userPerson);
 //        pDao.addPerson(userPerson);
+        yearTracker = CURRENT_YEAR - 25;
+        generationCounter = 0;
         //Original user has to have at least a birth
-        final int CURRENT_YEAR = 2020;
-        int year = CURRENT_YEAR - 25;
         events.add(generateEvent(userPerson.getUsername(),userPerson.getPersonID(),getRandomLocation(),
-                "birth",year));
+                "birth",yearTracker));
 //        eDao.addEvent(generateEvent(userPerson.getUsername(),userPerson.getPersonID(),getRandomLocation(),
 //                "birth",year));
         //Add additional generations as requested recursively
-        recurse(userPerson, generation, pDao, eDao, events, persons);
+        recurse(userPerson, generation, events, persons);
         pDao.addAllPersons(persons);
         eDao.addAllEvents(events);
+        db.closeConnection(true);
     }
 
-    private void recurse(Person child, int generation, PersonDao pDao, EventDao eDao, ArrayList<Event> events, ArrayList<Person> persons) throws DataAccessException, IOException {
+    private void recurse(Person child, int generation, ArrayList<Event> events, ArrayList<Person> persons) throws DataAccessException, IOException {
         //base case
         if(generation == 0) { return; }
         //Father Data
@@ -62,7 +73,9 @@ public class Generate {
         //Gender neutral data
         String lastName = getSurname();
         String associatedUsername = child.getUsername();
-        int year = eDao.getEvent(child.getPersonID()+"-"+"birth").getYear();
+//        int year = eDao.getEvent(child.getPersonID()+"-"+"birth").getYear();
+        yearTracker = yearTracker - generationCounter*25;
+        generationCounter++;
         Location marriageLocation = getRandomLocation();
 
         //Generate and link father of person
@@ -74,16 +87,16 @@ public class Generate {
 //        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
 //                "birth",year-25));
         events.add(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
-                "birth",year-25));
+                "birth",yearTracker-25));
 //        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), marriageLocation,
 //                "marriage",year-5));
         events.add(generateEvent(child.getUsername(), father.getPersonID(), marriageLocation,
-                "marriage",year-5));
+                "marriage",yearTracker-5));
 //        eDao.addEvent(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
 //                "death",year+30));
         events.add(generateEvent(child.getUsername(), father.getPersonID(), getRandomLocation(),
-                "death",year+30));
-        recurse(father, generation-1, pDao, eDao, events, persons);
+                "death",yearTracker+30));
+        recurse(father, generation-1, events, persons);
 
 
         //Generate and link mother of person
@@ -95,23 +108,23 @@ public class Generate {
 //        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
 //                "birth",year-25));
         events.add(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
-                "birth",year-25));
+                "birth",yearTracker-25));
 //        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), marriageLocation,
 //                "marriage",year-5));
         events.add(generateEvent(child.getUsername(), mother.getPersonID(), marriageLocation,
-                "marriage",year-5));
+                "marriage",yearTracker-5));
 //        eDao.addEvent(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
 //                "death",year+30));
         events.add(generateEvent(child.getUsername(), mother.getPersonID(), getRandomLocation(),
-                "death",year+30));
-        recurse(mother, generation-1, pDao, eDao, events, persons);
+                "death",yearTracker+30));
+        recurse(mother, generation-1, events, persons);
     }
 
 
     private Event generateEvent(String associatedUsername, String personID, Location location, String eventType, int year) throws IOException {
         JsonStrings jStrings = new JsonStrings();
         String locations = jStrings.getLocations();
-        LocationData jsonLocations = JsonSerializer.deserialize(locations, LocationData.class);
+        LocationData jsonLocations = new JsonSerializer().deserialize(locations, LocationData.class);
         ArrayList<Location> locationList = jsonLocations.getData();
         String eventID = personID+"-"+eventType;
 
@@ -133,7 +146,7 @@ public class Generate {
     private String getMaleName() throws IOException {
         JsonStrings jStrings = new JsonStrings();
         String mnames = jStrings.getMnames();
-        NameData maleNames = JsonSerializer.deserialize(mnames, NameData.class);
+        NameData maleNames = new JsonSerializer().deserialize(mnames, NameData.class);
         Random rand = new Random();
         ArrayList<String> finalNames = maleNames.getData();
         return finalNames.get(rand.nextInt(finalNames.size()));
@@ -142,7 +155,7 @@ public class Generate {
     private String getFemaleName() throws IOException {
         JsonStrings jStrings = new JsonStrings();
         String fnames = jStrings.getFnames();
-        NameData femaleNames = JsonSerializer.deserialize(fnames, NameData.class);
+        NameData femaleNames = new JsonSerializer().deserialize(fnames, NameData.class);
         Random rand = new Random();
         ArrayList<String> finalNames = femaleNames.getData();
         return finalNames.get(rand.nextInt(finalNames.size()));
@@ -151,7 +164,7 @@ public class Generate {
     private String getSurname() throws IOException {
         JsonStrings jStrings = new JsonStrings();
         String snames = jStrings.getSnames();
-        NameData surnames = JsonSerializer.deserialize(snames, NameData.class);
+        NameData surnames = new JsonSerializer().deserialize(snames, NameData.class);
         Random rand = new Random();
         ArrayList<String> finalNames = surnames.getData();
         return finalNames.get(rand.nextInt(finalNames.size()));
@@ -160,7 +173,7 @@ public class Generate {
     private Location getRandomLocation() throws IOException {
         JsonStrings jStrings = new JsonStrings();
         String jsonLocations = jStrings.getLocations();
-        LocationData ld = JsonSerializer.deserialize(jsonLocations, LocationData.class);
+        LocationData ld = new JsonSerializer().deserialize(jsonLocations, LocationData.class);
         ArrayList<Location> locations = ld.getData();
         Random rand = new Random();
         return locations.get(rand.nextInt(locations.size()));

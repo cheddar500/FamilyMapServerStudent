@@ -93,11 +93,23 @@ public class FillHandler implements HttpHandler {
         try{
             if(inputExchange.getRequestMethod().toUpperCase().equals("POST")){
                 FillRequest request = new FillRequest(generations, userName);
-                FillResponse response = new FillService().fill(request);
-                //send that it was ok
-                inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                //give me where I need to write what happened -> write the response we got
-                inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
+                FillResponse response = null;
+                try {
+                    FillResponse response1 = new FillService().fill(request);
+                } catch (Exception e){
+                    System.out.println();
+                    throw e;
+                }
+                if(!response.getSuccess()){//clear test response is null here
+                    inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    FillResponse resp = new FillResponse("Error: user already exists", false);
+                    inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
+                } else {
+                    //send that it was ok
+                    inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+                    //give me where I need to write what happened -> write the response we got
+                    inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
+                }
 
             }
         } catch(DataAccessException | SQLException e){
@@ -106,6 +118,6 @@ public class FillHandler implements HttpHandler {
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();
         }
-        inputExchange.close();
+        inputExchange.getResponseBody().close();
     }
 }

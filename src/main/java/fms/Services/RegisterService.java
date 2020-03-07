@@ -40,28 +40,14 @@ public class RegisterService {
         //Create a new account
         ////////////////////////
         //request contains:
-//        * @param email Users email
-//        * @param firstName Users first name
-//        * @param lastName Users last name
-//        * @param gender Users gender
-//        * @param password Users password
-//        * @param userName Users username
         //make user and store in database
         UserDao uDao = new UserDao(conn);
-        //user:
-//        * @param userName UserName: Unique user name (non-empty string)
-//        * @param password Password: User’s password (non-empty string)
-//        * @param email Email: User’s email address (non-empty string)
-//        * @param firstName First Name: User’s first name (non-empty string)
-//        * @param lastName Last Name: User’s last name (non-empty string)
-//        * @param gender Gender: User’s gender (string: f or m)
-//        * @param personID Person ID: Unique Person ID assigned to this user’s generated Person object
         String userName = request.getUserName();
-        //if user already exists, can't register them
+        //if user already exists or is null, can't register them
         User testIfExits = uDao.getUser(userName);
-        if(testIfExits != null){
+        if(testIfExits != null || userName == null){
             db.closeConnection(true);
-            String message = "Error: user already exists";
+            String message = "Error: invalid username";
             return new RegisterResponse(message, false);
         }
         String personID = UUID.randomUUID().toString();
@@ -75,8 +61,12 @@ public class RegisterService {
         PersonDao pDao = new PersonDao(conn);
         Person userPerson = new Person(user.getPersonID(), user.getUserName(), user.getFirstName(), user.getLastName(),
                 user.getGender(), UUID.randomUUID().toString(), UUID.randomUUID().toString(),null);
+        db.closeConnection(true);
+
         Generate getData = new Generate();
-        getData.generateInfo(userPerson, 4, conn);
+        getData.generateInfo(userPerson, 4);
+
+        conn = db.openConnection();
 
         ///////////////////////////
         //logs the user in

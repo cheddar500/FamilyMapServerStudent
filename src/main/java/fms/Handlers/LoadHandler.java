@@ -37,7 +37,7 @@ public class LoadHandler implements HttpHandler {
                     sb.append(scan.next()); sb.append(" ");
                 }
                 String requestString = sb.toString();
-                LoadRequest request = JsonSerializer.deserialize(requestString, LoadRequest.class);
+                LoadRequest request = new JsonSerializer().deserialize(requestString, LoadRequest.class);
                 LoadResponse response = new LoadService().load(request);
                 if(!response.getSuccess()){
                     inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
@@ -56,6 +56,6 @@ public class LoadHandler implements HttpHandler {
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();
         }
-        inputExchange.close();
+        inputExchange.getResponseBody().close();
     }
 }

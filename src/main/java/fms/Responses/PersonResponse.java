@@ -113,7 +113,7 @@ public class PersonResponse implements IResponse{
      */
     @Override
     public String getResponseBody(){
-        return JsonSerializer.serialize(this, PersonResponse.class);
+        return new JsonSerializer().serialize(this, PersonResponse.class);
     }
 
 

@@ -119,7 +119,7 @@ public class EventResponse implements IResponse{
      */
     @Override
     public String getResponseBody(){
-        return JsonSerializer.serialize(this, EventResponse.class);
+        return new JsonSerializer().serialize(this, EventResponse.class);
     }
 
 

@@ -1,11 +1,8 @@
 package fms.Dao;
 
 import fms.Exceptions.DataAccessException;
-import fms.Database;
-import fms.Model.AuthToken;
 import fms.Model.User;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
 
 /**
@@ -48,6 +45,8 @@ public class UserDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("ud add user");
             throw new DataAccessException("Error encountered while inserting user into the database");
         }
     }
@@ -61,6 +60,8 @@ public class UserDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("ud clear");
             throw new DataAccessException("Error encountered while clearing User in the database");
         }
     }
@@ -85,6 +86,7 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("ud get user 1");
             throw new DataAccessException("Error encountered while finding user");
         } finally {
             if(rs != null) {
@@ -92,61 +94,12 @@ public class UserDao {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    System.out.println("ud get user 2");
                 }
             }
 
         }
         return null;
-    }
-
-    /**
-     * Log's specified User into the server
-     * User is returned
-     * @param userNameIn User's name in table
-     * @param passwordIn User's associated password in table
-     * @return User from table
-     */
-    public User login(String userNameIn, String passwordIn) throws DataAccessException{
-        User result = new User();
-        //validate password, throw error if doesn't match
-        String realPassword = null;
-        String tempUserName = null;
-        boolean validPassword = false;
-        String sql = "SELECT * FROM User WHERE userName = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, userNameIn);
-            ResultSet results = stmt.executeQuery();
-            if(results.next())
-            {
-                tempUserName = results.getString("userName");
-                realPassword = results.getString("password");
-                result = new User(tempUserName, realPassword, results.getString("email"),
-                        results.getString("firstName"), results.getString("lastName"),
-                        results.getString("gender"), results.getString("personID"));
-                if(realPassword.equals(passwordIn) && tempUserName.equals(userNameIn)){
-                    validPassword = true;
-                }
-            }
-            //throw an error if invalid password, include word "error" and 400 number
-            if(!validPassword){
-
-                throw new DataAccessException("Error 400 number : invalid password");
-                //return null;
-            }
-            //generate a new unique authToken
-//            AuthTokenDao atDao = new AuthTokenDao(conn);
-//            String newAuthToken = atDao.generateAuthToken();
-//            String newAuthToken = atDao.getAuthToken(userNameIn).getAuthToken();
-            //add userName and authToken to AuthToken table
-//            AuthToken at = new AuthToken(newAuthToken, userNameIn);
-//            atDao.addAuthToken(at);
-            stmt.close();
-            //get user from User table and return them
-            return result;
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error encountered while logging user into the database");
-        }
     }
 
 }

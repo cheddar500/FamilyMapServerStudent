@@ -59,15 +59,12 @@ public class FileHandler implements HttpHandler {
                     System.out.println("Returned: web"+uriInfo);
                 }
                 outStream.write(fileInStream.readAllBytes());
-                outStream.close();
-                inputExchange.close();
             }
         } catch(IOException e){
             inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            inputExchange.getResponseBody().close();
             e.printStackTrace();
         }
 
-
+        inputExchange.getResponseBody().close();
     }
 }

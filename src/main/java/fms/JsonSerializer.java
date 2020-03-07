@@ -13,7 +13,7 @@ public class JsonSerializer {
      * @param <T> The Java type
      * @return Object of the specified type parsed from the JSON code
      */
-    public static <T> T deserialize(String value, Class<T> returnType){
+    public <T> T deserialize(String value, Class<T> returnType){
         return (new Gson()).fromJson(value, returnType);
     }
 
@@ -29,7 +29,7 @@ public class JsonSerializer {
      * @param <T>
      * @return The JSON equivalent of your Java object
      */
-    public static <T> String serialize(T value, Class<T> javaObject){
+    public <T> String serialize(T value, Class<T> javaObject){
         return(new Gson()).toJson(value, javaObject);
     }
 

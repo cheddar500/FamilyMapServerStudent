@@ -44,13 +44,20 @@ public class PersonService {
 
         //get all family members or single
         PersonDao pDao = new PersonDao(conn);
+        String userOwner = pDao.getPerson(request.getPersonID()).getUsername();
+        //make sure event(s) belong to the requestee
+        if(!userOwner.equals(userName)){
+            db.closeConnection(true);
+            String message2 = "Error: Person does not belong to you";
+            return new PersonResponse(message2, false);
+        }
         //if only requested to get one person
         if(!request.getGetAll()){
             Person result = pDao.getPerson(request.getPersonID());
-            if(!result.getUsername().equals(userName)){
+            if(result == null){
                 db.closeConnection(true);
-                String message = "Error: requested person doesn't belong to you";
-                return new PersonResponse(message, false);
+                String message2 = "Error: Person does not exist";
+                return new PersonResponse(message2, false);
             }
             db.closeConnection(true);
             return new PersonResponse(userName,request.getPersonID(),result.getFirstName(),
@@ -72,23 +79,23 @@ public class PersonService {
         //if username from authToken down == single user, then belongs to them and is valid can give back info
         //else, doesn't belong to that user,
         //means try to match person obj from given personID to person obj from authToken, must match
-        if(!request.getGetAll()) {
-            try {
-                String usernameFromID = null;
-                String personID = request.getPersonID();
-                Person tempPerson = pDao.getPerson(personID);
-                usernameFromID = tempPerson.getUsername();
-                if (!userName.equals(usernameFromID)) {
-                    db.closeConnection(true);
-                    String message = "Error: authToken and personID don't match, invalid privileges";
-                    return new PersonResponse(message, false);
-                }
-            } catch (Exception e) {
-                db.closeConnection(true);
-                String message = "Error: Failed to get all Person objects";
-                return new PersonResponse(message, false);
-            }
-        }
+//        if(!request.getGetAll()) {
+//            try {
+//                String usernameFromID = null;
+//                String personID = request.getPersonID();
+//                Person tempPerson = pDao.getPerson(personID);
+//                usernameFromID = tempPerson.getUsername();
+//                if (!userName.equals(usernameFromID)) {
+//                    db.closeConnection(true);
+//                    String message = "Error: authToken and personID don't match, invalid privileges";
+//                    return new PersonResponse(message, false);
+//                }
+//            } catch (Exception e) {
+//                db.closeConnection(true);
+//                String message = "Error: Failed to get all Person objects";
+//                return new PersonResponse(message, false);
+//            }
+//        }
 
         db.closeConnection(true);
         String message = "Successfully got all the Person objects";

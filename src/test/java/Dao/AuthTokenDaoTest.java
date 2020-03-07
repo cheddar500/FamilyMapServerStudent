@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,10 +20,13 @@ class AuthTokenDaoTest {
     private AuthToken bestAuthToken;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws DataAccessException {
         //here we can set up any classes or variables we will need for the rest of our tests
         //lets create a new database
         db = new Database();
+        db.openConnection();
+        db.clearTables();
+        db.closeConnection(true);
         //and a new person with random data
         bestAuthToken = new AuthToken("123", "myUsername");
     }

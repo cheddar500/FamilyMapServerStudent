@@ -49,6 +49,11 @@ public class LoadService {
         ArrayList<User> users = request.getUsers();
         ArrayList<Event> events = request.getEvents();
         ArrayList<Person> people = request.getPersons();
+        if(users == null || events == null || people == null){
+            String message = "invalid data, null, could not load";
+            db.closeConnection(false);
+            return new LoadResponse(message, false);
+        }
         for (int i = 0; i < users.size(); i++) {
             uDao.addUser(users.get(i));
         }

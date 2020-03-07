@@ -36,7 +36,7 @@ public class RegisterHandler implements HttpHandler {
                 sb.append(scan.next()); sb.append(" ");
             }
             String requestString = sb.toString();
-            RegisterRequest request = JsonSerializer.deserialize(requestString, RegisterRequest.class);
+            RegisterRequest request = new JsonSerializer().deserialize(requestString, RegisterRequest.class);
             RegisterResponse response = new RegisterService().register(request);
             if(!response.getSuccess()){
                 inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
@@ -54,6 +54,6 @@ public class RegisterHandler implements HttpHandler {
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();
         }
-        inputExchange.close();
+        inputExchange.getResponseBody().close();
     }
 }

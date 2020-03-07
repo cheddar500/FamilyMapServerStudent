@@ -38,7 +38,7 @@ public class LoginHandler implements HttpHandler {
                     sb.append(" ");
                 }
                 String requestString = sb.toString();
-                LoginRequest request = JsonSerializer.deserialize(requestString, LoginRequest.class);
+                LoginRequest request = new JsonSerializer().deserialize(requestString, LoginRequest.class);
                 LoginResponse response = new LoginService().login(request);
                 if (!response.getSuccess()){
                     inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
@@ -58,6 +58,6 @@ public class LoginHandler implements HttpHandler {
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());
             e.printStackTrace();
         }
-        inputExchange.close();
+        inputExchange.getResponseBody().close();
     }
 }

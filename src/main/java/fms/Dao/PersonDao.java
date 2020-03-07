@@ -56,10 +56,10 @@ public class PersonDao {
             stmt.setString(6, person.getFatherID());
             stmt.setString(7, person.getMotherID());
             stmt.setString(8, person.getSpouseID());
-
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while inserting person into the database");
         }
     }
@@ -73,6 +73,7 @@ public class PersonDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while clearing person in the database");
         }
     }
@@ -82,8 +83,14 @@ public class PersonDao {
      * @param personList List of Persons to be deleted
      */
     public void deleteAllPersons(List<Person> personList) throws DataAccessException {
-        for (int i = 0; i < personList.size(); i++) {
-            deletePerson(personList.get(i).getPersonID());
+        try {
+            if (personList.size() > 0 && personList != null) {
+                for (int i = 0; i < personList.size(); i++) {
+                    deletePerson(personList.get(i).getPersonID());
+                }
+            }
+        } catch(DataAccessException e){
+            e.printStackTrace();
         }
     }
 
@@ -99,24 +106,11 @@ public class PersonDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while deleting person");
         }
     }
 
-
-//    /**
-//     * Delete one Persons passed in to the table
-//     * @param associatedUsername  Person to be deleted
-//     */
-//    public void deletePerson(String associatedUsername ) throws DataAccessException {
-//        String sql = "DELETE FROM Person WHERE associatedUsername = ?";
-//        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-//            stmt.setString(1, associatedUsername );
-//            stmt.execute();
-//        } catch (SQLException e) {
-//            throw new DataAccessException("Error encountered while deleting person");
-//        }
-//    }
 
     /**
      * Get a Person from the database if they exist

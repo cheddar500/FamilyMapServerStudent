@@ -70,6 +70,10 @@ public class FillService {
         String personID =  user.getPersonID();
         PersonDao pDao = new PersonDao(conn);
         Person userPerson = pDao.getPerson(personID);
+        if(userPerson == null){
+            userPerson = new Person(personID, userName, user.getFirstName(),user.getLastName(),
+                    user.getGender(),"DarthVader8U4beakfast","Leah4Senate",null);
+        }
         deleteUserData(conn, userName);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,8 +86,15 @@ public class FillService {
         /////////////////////////////////////////////
         // Based on the requested number of generations, you should fill out the user’s family tree with generated Person and Event data.
 //        addGeneratedFamilyToTree(conn, request, user);
+        db.closeConnection(true);
+
         Generate getData = new Generate();
-        getData.generateInfo(userPerson, request.getNumOfGenerations(), conn);
+        if(request.getNumOfGenerations() < 0){
+            String message = "Invalid number for generations of data";
+            return new FillResponse(message, false);
+        }
+        getData.generateInfo(userPerson, request.getNumOfGenerations());
+
 
         /////////////////////////////////////////////
         //Close connection, return response
@@ -94,7 +105,6 @@ public class FillService {
             numberOfPersons += Math.pow(2,i);
         }
         numOfEvents += (numberOfPersons-1)*3;
-        db.closeConnection(true);
         String message = "Successfully added "+numberOfPersons+" persons and "+numOfEvents+" events to the database.";
         return new FillResponse(message, true);
     }
@@ -114,8 +124,12 @@ public class FillService {
         EventDao eDao = new EventDao(conn);
         associatedPeople = pDao.getPersonsOf(userName);
         associatedEvents = eDao.getEventsOf(userName);
-        pDao.deleteAllPersons(associatedPeople);
-        eDao.deleteAllEvents(associatedEvents);
+        if(associatedEvents != null && associatedEvents.size() > 0) {
+            eDao.deleteAllEvents(associatedEvents);
+        }
+        if(associatedPeople != null && associatedPeople.size() > 0) {
+            pDao.deleteAllPersons(associatedPeople);
+        }
     }
 
 

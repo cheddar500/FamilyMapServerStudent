@@ -55,10 +55,10 @@ public class EventDao {
             stmt.setString(7, event.getCity());
             stmt.setString(8, event.getEventType());
             stmt.setInt(9, event.getYear());
-
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while inserting event into the database");
         }
     }
@@ -72,6 +72,7 @@ public class EventDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while clearing event in the database");
         }
     }
@@ -98,6 +99,7 @@ public class EventDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Error encountered while deleting event");
         }
     }
