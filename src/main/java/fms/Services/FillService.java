@@ -38,22 +38,13 @@ public class FillService {
      * @throws DataAccessException
      */
     public FillResponse fill(FillRequest request) throws DataAccessException, IOException, SQLException {
-        Database db = new Database();
-        Connection conn = db.openConnection();
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //generations default 4, must be non-negative
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        if(request.getNumOfGenerations() == null){
+        Database db = new Database(); Connection conn = db.openConnection();
+        if(request.getNumOfGenerations() == null){ //generations default 4, must be non-negative
             db.closeConnection(true);
             String message = "Error: invalid number of generations, must be non-negative";
             return new FillResponse(message, false);
         }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //The required "username" parameter must be a user already registered with the server
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        String userName = request.getUserName();
+        String userName = request.getUserName(); //The required "username" parameter must be a user already registered with the server
         UserDao uDao = new UserDao(conn);
         User user = uDao.getUser(userName);
         if(user == null){
@@ -61,11 +52,7 @@ public class FillService {
             String message = "Error: invalid userName";
             return new FillResponse(message, false);
         }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //If there is any data in the database already associated with the given user name, it is deleted
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //?????????check if null for data as well and throw error or always fine since already registered????***************************?????????????????
         //before we delete, I need to save the users Person object
         String personID =  user.getPersonID();
         PersonDao pDao = new PersonDao(conn);
@@ -75,30 +62,13 @@ public class FillService {
                     user.getGender(),"DarthVader8U4beakfast","Leah4Senate",null);
         }
         deleteUserData(conn, userName);
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////Generate data//////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /////////////////////////////////////////////
-        //A user’s family history data should include at least one Person object, which represents the user him or herself
-        //Beyond the user’s own Person object, there can be zero or more additional generations of data.
-        /////////////////////////////////////////////
-        // Based on the requested number of generations, you should fill out the user’s family tree with generated Person and Event data.
-//        addGeneratedFamilyToTree(conn, request, user);
         db.closeConnection(true);
-
-        Generate getData = new Generate();
+        Generate getData = new Generate(); //generate data
         if(request.getNumOfGenerations() < 0){
             String message = "Invalid number for generations of data";
             return new FillResponse(message, false);
         }
         getData.generateInfo(userPerson, request.getNumOfGenerations());
-
-
-        /////////////////////////////////////////////
-        //Close connection, return response
-        /////////////////////////////////////////////
         int numberOfPersons = 1;
         int numOfEvents = 1;
         for (int i = request.getNumOfGenerations(); i > 0; i++) {

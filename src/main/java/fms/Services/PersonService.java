@@ -7,7 +7,6 @@ import fms.Exceptions.DataAccessException;
 import fms.Model.Person;
 import fms.Requests.PersonRequest;
 import fms.Responses.PersonResponse;
-
 import java.sql.Connection;
 import java.util.ArrayList;
 
@@ -30,10 +29,8 @@ public class PersonService {
      * @throws DataAccessException
      */
     public PersonResponse getPerson(PersonRequest request) throws DataAccessException {
-        Database db = new Database();
-        Connection conn = db.openConnection();
-        //use authToken get username, if null invalid
-        AuthTokenDao atDao = new AuthTokenDao(conn);
+        Database db = new Database(); Connection conn = db.openConnection();
+        AuthTokenDao atDao = new AuthTokenDao(conn); //use authToken get username, if null invalid
         String authToken = request.getAuthToken();
         String userName = atDao.getUserName(authToken);
         if(userName == null){
@@ -41,64 +38,30 @@ public class PersonService {
             String message = "Error: null username";
             return new PersonResponse(message, false);
         }
-
-        //get all family members or single
-        PersonDao pDao = new PersonDao(conn);
+        PersonDao pDao = new PersonDao(conn); //get all family members or single
         String userOwner = pDao.getPerson(request.getPersonID()).getUsername();
-        //make sure event(s) belong to the requestee
-        if(!userOwner.equals(userName)){
+        if(!userOwner.equals(userName)){ //make sure event(s) belong to the requestee
             db.closeConnection(true);
             String message2 = "Error: Person does not belong to you";
             return new PersonResponse(message2, false);
         }
-        //if only requested to get one person
-        if(!request.getGetAll()){
+        if(!request.getGetAll()){ //if only requested to get one person
             Person result = pDao.getPerson(request.getPersonID());
             if(result == null){
                 db.closeConnection(true);
-                String message2 = "Error: Person does not exist";
-                return new PersonResponse(message2, false);
+                return new PersonResponse("Error: Person does not exist", false);
             }
             db.closeConnection(true);
             return new PersonResponse(userName,request.getPersonID(),result.getFirstName(),
             result.getLastName(), result.getGender(),result.getFatherID(),result.getMotherID(),
                     result.getSpouseID(),true);
         }
-        //otherwise get all connected persons
-        ArrayList<Person> personList = new ArrayList<>();
-        personList = pDao.getPersonsOf(userName);
-        //two returns:
-        // user has no persons --> null
+        ArrayList<Person> personList  = pDao.getPersonsOf(userName); //otherwise get all connected persons
         if (personList.size() == 0) {
             db.closeConnection(true);
-            String message = "Error: user has no Person objects, null";
-            return new PersonResponse(message, false);
+            return new PersonResponse("Error: user has no Person objects, null", false);
         }
-        //or successfully returned all people
-
-        //if username from authToken down == single user, then belongs to them and is valid can give back info
-        //else, doesn't belong to that user,
-        //means try to match person obj from given personID to person obj from authToken, must match
-//        if(!request.getGetAll()) {
-//            try {
-//                String usernameFromID = null;
-//                String personID = request.getPersonID();
-//                Person tempPerson = pDao.getPerson(personID);
-//                usernameFromID = tempPerson.getUsername();
-//                if (!userName.equals(usernameFromID)) {
-//                    db.closeConnection(true);
-//                    String message = "Error: authToken and personID don't match, invalid privileges";
-//                    return new PersonResponse(message, false);
-//                }
-//            } catch (Exception e) {
-//                db.closeConnection(true);
-//                String message = "Error: Failed to get all Person objects";
-//                return new PersonResponse(message, false);
-//            }
-//        }
-
         db.closeConnection(true);
-        String message = "Successfully got all the Person objects";
-        return new PersonResponse(message, true, personList);
+        return new PersonResponse("Successfully got all the Person objects", true, personList);
     }
 }

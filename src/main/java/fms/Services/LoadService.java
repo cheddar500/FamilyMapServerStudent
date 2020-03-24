@@ -11,11 +11,8 @@ import fms.Model.Person;
 import fms.Model.User;
 import fms.Requests.LoadRequest;
 import fms.Responses.LoadResponse;
-
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Load interprets JSON Request and also completes the Load request

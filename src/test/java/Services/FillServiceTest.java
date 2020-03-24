@@ -1,12 +1,8 @@
 package Services;
 
-import fms.Dao.AuthTokenDao;
-import fms.Dao.EventDao;
 import fms.Dao.UserDao;
 import fms.Database;
 import fms.Exceptions.DataAccessException;
-import fms.Model.AuthToken;
-import fms.Model.Event;
 import fms.Model.User;
 import fms.Requests.FillRequest;
 import fms.Requests.LoginRequest;
@@ -18,13 +14,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class FillServiceTest {
 

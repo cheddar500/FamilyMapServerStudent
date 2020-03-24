@@ -1,6 +1,5 @@
 package fms.Handlers;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import fms.Exceptions.DataAccessException;
@@ -39,9 +38,6 @@ public class ClearHandler implements HttpHandler {
                 } else {
                     //send that it was ok
                     inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    //HttpExchange getResponseBody then ClearResponse getResponseBody
-                    //send the data
-                    //give me where I need to write what happened -> write the response we got
                     inputExchange.getResponseBody().write(clearMe.getResponseBody().getBytes());
                 }
             }

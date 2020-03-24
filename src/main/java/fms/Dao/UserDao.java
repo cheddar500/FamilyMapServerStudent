@@ -26,7 +26,7 @@ public class UserDao {
      * @param user User object to be added to the table
      */
     public void addUser(User user) throws DataAccessException {
-//We can structure our string to be similar to a sql command, but if we insert question
+        //We can structure our string to be similar to a sql command, but if we insert question
         //marks we can change them later with help from the statement
         String sql = "INSERT INTO User (userName, password, email, firstName, lastName, " +
                 "gender, personID) VALUES(?,?,?,?,?,?,?)";
@@ -41,7 +41,6 @@ public class UserDao {
             stmt.setString(5, user.getLastName());
             stmt.setString(6, user.getGender());
             stmt.setString(7, user.getPersonID());
-
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {

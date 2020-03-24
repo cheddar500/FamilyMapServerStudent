@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/FMShared/FMShared.iml" filepath="$PROJECT_DIR$/FMShared/FMShared.iml" group="shared" />
       <module fileurl="file://$PROJECT_DIR$/FamilyMapServerStudent.iml" filepath="$PROJECT_DIR$/FamilyMapServerStudent.iml" />
     </modules>
   </component>

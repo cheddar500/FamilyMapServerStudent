@@ -59,7 +59,6 @@ public class PersonDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataAccessException("Error encountered while inserting person into the database");
         }
     }

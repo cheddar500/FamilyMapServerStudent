@@ -10,9 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class AuthTokenDaoTest {
 
@@ -114,25 +112,6 @@ class AuthTokenDaoTest {
         }
         //Check to make sure that we did in fact enter our catch statement
         Assertions.assertFalse(didItWork);
-
-        //Since we know our database encountered an error, both instances of addAuthToken should have been
-        //rolled back. So for added security lets make one more quick check using our find function
-        //to make sure that our event is not in the database
-        //Set our compareTest to an actual event
-        AuthToken compareTest = bestAuthToken;
-        try {
-            Connection conn = db.openConnection();
-            AuthTokenDao atDao = new AuthTokenDao(conn);
-            //and then get something back from our find. If the event is not in the database we
-            //should have just changed our compareTest to a null object
-            compareTest = atDao.getAuthToken(bestAuthToken.getUserName());
-            db.closeConnection(true);
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
-        }
-
-        //Now make sure that compareTest is indeed null
-        Assertions.assertNull(compareTest);
     }
 
     @Test

@@ -39,7 +39,6 @@ public class AuthTokenDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataAccessException("Error encountered while inserting into the database");
         }
     }
@@ -133,7 +132,6 @@ public class AuthTokenDao {
                     result = userName;
                 }
             }
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DataAccessException("Error encountered while getting username from the database");

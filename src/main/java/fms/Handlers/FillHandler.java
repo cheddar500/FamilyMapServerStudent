@@ -31,7 +31,6 @@ public class FillHandler implements HttpHandler {
         final int USERNAME_LENGTH = 6; // /fill/ then username
         if(urlPathName.length() > USERNAME_LENGTH){
             char[] nameNum = urlPathName.substring(USERNAME_LENGTH).toCharArray();
-            String nameNumString = urlPathName.substring(USERNAME_LENGTH);
             int slashCount = 0;
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < nameNum.length; i++) {

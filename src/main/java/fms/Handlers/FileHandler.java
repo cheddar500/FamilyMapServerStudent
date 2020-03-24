@@ -32,7 +32,6 @@ public class FileHandler implements HttpHandler {
         System.out.println("Attempting to find " + inputExchange.getRequestURI());
         try{
             //ignore everything that isn't a GET
-            //could send a 405 (Method not allowed)
             if(inputExchange.getRequestMethod().toUpperCase().equals("GET")){
                 Headers reqHeaders = inputExchange.getRequestHeaders();
                 OutputStream outStream = inputExchange.getResponseBody();

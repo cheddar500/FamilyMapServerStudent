@@ -46,7 +46,6 @@ public class LoadHandler implements HttpHandler {
                 } else {
                     //send that it was ok
                     inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    //give me where I need to write what happened -> write the response we got
                     inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
                 }
             }

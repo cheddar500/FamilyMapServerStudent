@@ -11,6 +11,8 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="FamilyMapServerStudent" target="1.12" />
+      <module name="shared.main" target="1.8" />
+      <module name="shared.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

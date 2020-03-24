@@ -33,8 +33,7 @@ public class EventService {
     public EventResponse getEvent(EventRequest request) throws DataAccessException{
         Database db = new Database();
         Connection conn = db.openConnection();
-        //use authToken get username, if null invalid
-        AuthTokenDao atDao = new AuthTokenDao(conn);
+        AuthTokenDao atDao = new AuthTokenDao(conn); //use authToken get username, if null invalid
         String authToken = request.getAuthToken();
         String userName = atDao.getUserName(authToken);
         if(userName == null){
@@ -42,18 +41,13 @@ public class EventService {
             String message = "Error: username is null";
             return new EventResponse(message, false);
         }
-
-        //get all family members or single
-        EventDao eDao = new EventDao(conn);
+        EventDao eDao = new EventDao(conn); //get all family members or single
         String userOwner = eDao.getEvent(request.getEventID()).getUsername();
-        //make sure event(s) belong to the requestee
-        if(!userOwner.equals(userName)){
+        if(!userOwner.equals(userName)){ //make sure event(s) belong to the requestee
             db.closeConnection(true);
-            String message2 = "Error: Event does not belong to you";
-            return new EventResponse(message2, false);
+            return new EventResponse("Error: Event does not belong to you", false);
         }
-        //if only requested to get one person
-        if(!request.getGetAll()){
+        if(!request.getGetAll()){ //if only requested to get one event
             Event result = eDao.getEvent(request.getEventID());
             if(result == null){
                 db.closeConnection(true);
@@ -66,39 +60,12 @@ public class EventService {
                     result.getLongitude(), result.getCountry(),
                     result.getCity(), result.getEventType(), result.getYear(), true);
         }
-        //otherwise get all connected persons
-        ArrayList<Event> eventList = new ArrayList<>();
-        eventList = eDao.getEventsOf(userName);
-        //two returns:
-        // user has no events --> null
+        ArrayList<Event> eventList = eDao.getEventsOf(userName); //otherwise get all connected events
         if (eventList.size() == 0) {
             db.closeConnection(true);
             String message = "Error: user has no Event objects, null";
             return new EventResponse(message, false);
         }
-        //or successfully returned all people
-
-        //if username from authToken down == single user, then belongs to them and is valid can give back info
-        //else, doesn't belong to that user,
-        //means try to match person obj from given eventID to person obj from authToken, must match
-//        if(!request.getGetAll()) {
-//                try {
-//                    String usernameFromID = null;
-//                    String eventID = request.getEventID();
-//                    Event tempPerson = eDao.getEvent(eventID);
-//                    usernameFromID = tempPerson.getUsername();
-//                    if (!userName.equals(usernameFromID)) {
-//                        db.closeConnection(true);
-//                        String message = "Error: authToken and eventID don't match, invalid privileges";
-//                        return new EventResponse(message, false);
-//                    }
-//                } catch (Exception e) {
-//                    db.closeConnection(true);
-//                    String message = "Error: Failed to get all Event objects";
-//                    return new EventResponse(message, false);
-//                }
-//        }
-
         db.closeConnection(true);
         return new EventResponse(eventList, true);
     }

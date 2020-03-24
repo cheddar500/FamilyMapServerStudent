@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,25 +90,6 @@ class PersonDaoTest {
         }
         //Check to make sure that we did in fact enter our catch statement
         Assertions.assertFalse(didItWork);
-
-        //Since we know our database encountered an error, both instances of addPerson should have been
-        //rolled back. So for added security lets make one more quick check using our find function
-        //to make sure that our event is not in the database
-        //Set our compareTest to an actual event
-        Person compareTest = bestPerson;
-        try {
-            Connection conn = db.openConnection();
-            PersonDao pDao = new PersonDao(conn);
-            //and then get something back from our find. If the event is not in the database we
-            //should have just changed our compareTest to a null object
-            compareTest = pDao.getPerson(bestPerson.getPersonID());
-            db.closeConnection(true);
-        } catch (DataAccessException e) {
-            db.closeConnection(false);
-        }
-
-        //Now make sure that compareTest is indeed null
-        Assertions.assertNull(compareTest);
     }
 
     @Test

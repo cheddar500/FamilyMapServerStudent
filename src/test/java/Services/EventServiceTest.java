@@ -15,12 +15,9 @@ import fms.Responses.LoginResponse;
 import fms.Services.EventService;
 import fms.Services.LoginService;
 import org.junit.jupiter.api.*;
-
-
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class EventServiceTest {
 

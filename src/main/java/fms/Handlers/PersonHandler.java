@@ -58,9 +58,6 @@ public class PersonHandler implements HttpHandler {
                     } else {
                         //send that it was ok
                         inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                        //HttpExchange getResponseBody then ClearResponse getResponseBody
-                        //send the data
-                        //give me where I need to write what happened -> write the response we got
                         inputExchange.getResponseBody().write(response.getResponseBody().getBytes());
                     }
                 } else {
@@ -70,7 +67,6 @@ public class PersonHandler implements HttpHandler {
                 }
             }
         } catch(DataAccessException | IOException e){
-//            inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             inputExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             PersonResponse resp = new PersonResponse(e.getMessage(), false);
             inputExchange.getResponseBody().write(resp.getResponseBody().getBytes());

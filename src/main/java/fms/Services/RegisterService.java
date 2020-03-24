@@ -11,7 +11,6 @@ import fms.Model.Person;
 import fms.Model.User;
 import fms.Requests.RegisterRequest;
 import fms.Responses.RegisterResponse;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.UUID;
@@ -36,9 +35,7 @@ public class RegisterService {
     public RegisterResponse register(RegisterRequest request) throws DataAccessException, IOException {
         Database db = new Database();
         Connection conn = db.openConnection();
-        ////////////////////////
         //Create a new account
-        ////////////////////////
         //request contains:
         //make user and store in database
         UserDao uDao = new UserDao(conn);
@@ -47,35 +44,25 @@ public class RegisterService {
         User testIfExits = uDao.getUser(userName);
         if(testIfExits != null || userName == null){
             db.closeConnection(true);
-            String message = "Error: invalid username";
-            return new RegisterResponse(message, false);
+            return new RegisterResponse("Error: invalid username", false);
         }
         String personID = UUID.randomUUID().toString();
         User user = new User(userName, request.getPassword(), request.getEmail(), request.getFirstName(),request.getLastName(),
                 request.getGender(), personID);
         uDao.addUser(user);
-
-        ////////////////////////////////////////////
         //generate 4 generations of ancestor data
-        ////////////////////////////////////////////
         PersonDao pDao = new PersonDao(conn);
         Person userPerson = new Person(user.getPersonID(), user.getUserName(), user.getFirstName(), user.getLastName(),
                 user.getGender(), UUID.randomUUID().toString(), UUID.randomUUID().toString(),null);
         db.closeConnection(true);
-
         Generate getData = new Generate();
         getData.generateInfo(userPerson, 4);
-
         conn = db.openConnection();
-
-        ///////////////////////////
         //logs the user in
-        ////////////////////////////
         //Register attempt seems valid, try to get authToken
         AuthTokenDao atDao = new AuthTokenDao(conn);
         String authToken = atDao.generateAuthToken();
         atDao.addAuthToken(new AuthToken(authToken, userName));
-
         //all done, make sure to return authToken
         db.closeConnection(true);
         return new RegisterResponse(authToken, userName, personID,true);

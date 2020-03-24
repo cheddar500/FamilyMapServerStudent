@@ -1,7 +1,6 @@
 package fms;
 
 import fms.Exceptions.DataAccessException;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -38,6 +37,11 @@ public class Database {
 
     //**********************************************************************************************
 
+    /**
+     * get the connection to the database
+     * @return a connection
+     * @throws DataAccessException bad juju
+     */
     public Connection getConnection() throws DataAccessException {
         if(conn == null) {
             return openConnection();
@@ -48,8 +52,12 @@ public class Database {
 
     //**********************************************************************************************
 
-    //Whenever we want to make a change to our database we will have to open a connection and use
-    //Statements created by that connection to initiate transactions
+    /**
+     * Whenever we want to make a change to our database we will have to open a connection and use
+     * Statements created by that connection to initiate transactions
+     * @return a connection
+     * @throws DataAccessException more bad juju
+     */
     public Connection openConnection() throws DataAccessException {
         try {
             //The Structure for this Connection is driver:language:path

@@ -1,27 +1,21 @@
 package Services;
 
-import fms.Dao.UserDao;
 import fms.Database;
 import fms.Exceptions.DataAccessException;
 import fms.Model.Event;
 import fms.Model.Person;
 import fms.Model.User;
 import fms.Requests.LoadRequest;
-import fms.Requests.LoginRequest;
 import fms.Responses.LoadResponse;
-import fms.Responses.LoginResponse;
 import fms.Services.LoadService;
-import fms.Services.LoginService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Array;
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 class LoadServiceTest {
 

@@ -51,17 +51,11 @@ public class LoginService {
             return new LoginResponse("User doesn't exist", false);
         }
 
-
         //login seems valid, try to get authToken
         AuthTokenDao atDao = new AuthTokenDao(conn);
         AuthToken authTokenClass = atDao.getAuthToken(request.getUserName());
-        //check if username doesn't have an authToken
-//        if(authTokenClass == null){ //commented out b/c supposed to be able to have multiple
-        //logins right?
-            String newAuthToken = new AuthTokenDao(conn).generateAuthToken();
-            atDao.addAuthToken(new AuthToken(newAuthToken, request.getUserName()));
-            authTokenClass = atDao.getAuthToken(request.getUserName());
-//        }
+        String newAuthToken = new AuthTokenDao(conn).generateAuthToken();
+        atDao.addAuthToken(new AuthToken(newAuthToken, request.getUserName()));
         String message = "Successfully logged in";
         db.closeConnection(true);
         return new LoginResponse(authTokenClass.getAuthToken(), message, user.getPersonID(), true, authTokenClass.getUserName());
