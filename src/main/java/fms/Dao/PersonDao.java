@@ -72,7 +72,7 @@ public class PersonDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while clearing person in the database");
         }
     }
@@ -89,7 +89,7 @@ public class PersonDao {
                 }
             }
         } catch(DataAccessException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -105,7 +105,7 @@ public class PersonDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while deleting person");
         }
     }
@@ -130,14 +130,14 @@ public class PersonDao {
                 return person;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while finding person");
         } finally {
             if(rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
 
@@ -167,14 +167,14 @@ public class PersonDao {
             stmt.close();
             return persons;
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while finding persons of person");
         } finally {
             if(rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
 

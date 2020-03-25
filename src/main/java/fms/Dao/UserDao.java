@@ -44,7 +44,7 @@ public class UserDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("ud add user");
             throw new DataAccessException("Error encountered while inserting user into the database");
         }
@@ -59,7 +59,7 @@ public class UserDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("ud clear");
             throw new DataAccessException("Error encountered while clearing User in the database");
         }
@@ -84,7 +84,7 @@ public class UserDao {
                 return user;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("ud get user 1");
             throw new DataAccessException("Error encountered while finding user");
         } finally {
@@ -92,7 +92,7 @@ public class UserDao {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     System.out.println("ud get user 2");
                 }
             }

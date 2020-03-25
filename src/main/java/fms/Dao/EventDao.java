@@ -71,7 +71,7 @@ public class EventDao {
             stmt.executeUpdate(sql);
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while clearing event in the database");
         }
     }
@@ -98,7 +98,7 @@ public class EventDao {
             stmt.executeUpdate();
             conn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while deleting event");
         }
     }
@@ -123,14 +123,14 @@ public class EventDao {
                 return event;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while finding event");
         } finally {
             if(rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
 
@@ -161,14 +161,14 @@ public class EventDao {
             stmt.close();
             return events;
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             throw new DataAccessException("Error encountered while finding events of event");
         } finally {
             if(rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
 
